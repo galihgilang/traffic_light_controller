@@ -1,0 +1,1073 @@
+C51 COMPILER V8.16   AT89C51RC2                                                            10/08/2013 11:10:29 PAGE 1   
+
+
+C51 COMPILER V8.16, COMPILATION OF MODULE AT89C51RC2
+OBJECT MODULE PLACED IN at89c51rc2.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE at89c51rc2.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<lcd.h>
+   2          #include<stdio.h>
+   3          #include<string.h>
+   4          #include<AT89C51RC2.h>   
+   5          #include<intrins.h>   
+   6          
+   7          #define COR     '/'
+   8          #define MEN     'x'
+   9          #define UP              '-'
+  10          #define DOWN    '+'
+  11          #define CAN     'm'
+  12          #define ENT     '='
+  13          
+  14          void StartUp();                         // 1
+  15          void Idle();                            // 2
+  16          void InputSetting();            // 3
+  17          void Monitor();                         // 4
+  18          void InputKeypad();                     // 5
+  19          void InputKompSer();            // 6
+  20          void InputKompInt();            // 7
+  21          void SetHoliday();                      // 8
+  22          void SetTanggal();                      // 9
+  23          void SetWaktu();                        // 10
+  24          void SetPlan();                         // 11
+  25          void SetPlanPilih();            // 12
+  26          void SetProgramHarian();        // 13
+  27          void SetProgramHarianPilih();   // 14
+  28          void SetStartUp();                      // 15
+  29          void UpdateProgramHarian();     // 16
+  30          void UpdatePlan();                      // 17
+  31          void UpdateLampu();                     // 18
+  32          char READ_SWITCHES(void);       // 18
+  33          char get_key(void);                     // 20
+  34          
+  35          //------------------ Module Connections -------------
+  36          //LCD Module Connections
+  37          sbit RS = P0^0;                                                                   
+  38          sbit EN = P0^1;                            
+  39          sbit D0 = P2^0;
+  40          sbit D1 = P2^1;
+  41          sbit D2 = P2^2;
+  42          sbit D3 = P2^3;
+  43          sbit D4 = P0^4;
+  44          sbit D5 = P0^5;
+  45          sbit D6 = P0^6;
+  46          sbit D7 = P0^7;
+  47          
+  48          // Keypad
+  49          sbit RowA = P3^0;       //RowA
+  50          sbit RowB = P3^1;       //RowB
+  51          sbit RowC = P3^2;       //RowC
+  52          sbit RowD = P3^3;       //RowD
+  53          sbit C1   = P3^4;       //Column1
+  54          sbit C2   = P3^5;       //Column2
+  55          sbit C3   = P3^6;       //Column3
+C51 COMPILER V8.16   AT89C51RC2                                                            10/08/2013 11:10:29 PAGE 2   
+
+  56          sbit C4   = P3^7;       //Column4
+  57          
+  58          void Delay(int a)
+  59          {
+  60   1          int j;
+  61   1          int i;
+  62   1          for(i=0;i<a;i++)
+  63   1          {
+  64   2              for(j=0;j<100;j++)
+  65   2              {
+  66   3              }
+  67   2          }
+  68   1      }
+  69          
+  70          /*----------------- Variabel ------------------*/
+  71          char key='n';
+  72          char *str[4];
+  73          char st1[3];
+  74          char temp=61;
+  75          char baris=0;
+  76          char stateset=0;
+  77          char progharpilihan;
+  78          char planpilihan;
+  79          
+  80          char jam = 23, mnt = 6, dtk = 0, bln = 1, tgl = 12, hr = 3;             // RTC, EEPROM
+  81          int thn = 2013;
+  82          char dtkstartup = 2;                                                                                    // EEPROM
+  83          //int holiday[20];
+  84          //int listproghar1[70];
+  85          char listplan1[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  86          char listplan2[16] = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  87          /*char listplan3[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  88          char listplan4[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  89          char listplan5[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  90          char listplan6[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  91          char listplan7[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  92          char listplan8[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  93          char listplan9[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  94          char listplan10[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  95          char listplan11[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  96          char listplan12[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  97          char listplan13[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  98          char listplan14[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  99          char listplan15[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+ 100          char listplan16[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};*/
+ 101          
+ 102          char proghar = 1;               // RAM
+ 103          char plan = 1;
+ 104          char lampu = 0;
+ 105          
+ 106          void main(){
+ 107   1              Lcd4_Init();
+ 108   1              StartUp();
+ 109   1              
+ 110   1              while (1){
+ 111   2                      Idle();                 
+ 112   2              }
+ 113   1      }
+ 114          
+ 115          void StartUp(){         
+ 116   1              temp = dtkstartup;
+ 117   1              
+C51 COMPILER V8.16   AT89C51RC2                                                            10/08/2013 11:10:29 PAGE 3   
+
+ 118   1              Lcd4_Set_Cursor(1,0);Lcd4_Write_String("TRAFFIC TLPCO-08 SG");   
+ 119   1              
+ 120   1              while (temp > 0){       
+ 121   2                      Lcd4_Set_Cursor(2,0);Lcd4_Write_String("START UP:");
+ 122   2                      st1[0] = 48 + (temp / 10); st1[1] = 48 + (temp % 10);
+ 123   2                      Lcd4_Set_Cursor(2,10);Lcd4_Write_String(st1);
+ 124   2                      
+ 125   2                      temp--;
+ 126   2                      Delay(1000);
+ 127   2              } 
+ 128   1              Delay(1000);
+ 129   1              Lcd4_Clear();Delay(50);
+ 130   1      } 
+ 131          
+ 132          void Idle(){
+ 133   1              temp=61;
+ 134   1              Lcd4_Clear();Delay(50);
+ 135   1              
+ 136   1              Lcd4_Set_Cursor(1,0);Lcd4_Write_String("TELEPICO TLPCO-08 SG");                                         // baris 1
+ 137   1              
+ 138   1              Lcd4_Set_Cursor(2,4); Lcd4_Write_String(",");                                                                   // baris 2
+ 139   1              
+ 140   1              Lcd4_Set_Cursor(3,2);Lcd4_Write_String(":");
+ 141   1              Lcd4_Set_Cursor(3,5);Lcd4_Write_String(":");
+ 142   1              Lcd4_Set_Cursor(3,9); Lcd4_Write_String("S:");                                                                  // baris 3
+ 143   1              Lcd4_Set_Cursor(3,14); Lcd4_Write_String("P:");
+ 144   1              
+ 145   1              Lcd4_Set_Cursor(4,0);Lcd4_Write_String("[1] Set [2] Monitor");                                  // baris 4
+ 146   1              
+ 147   1              while((key != '1') && (key != '2')){
+ 148   2                      if(temp != dtk){
+ 149   3                              temp=dtk;
+ 150   3                              UpdateProgramHarian();UpdatePlan();UpdateLampu();
+ 151   3                              
+ 152   3                              switch (hr){                                                                                                                                    // baris 2
+ 153   4                                      case 1:  
+ 154   4                                              Lcd4_Set_Cursor(2,1);Lcd4_Write_String("MGG");  break;
+ 155   4                                      case 2:  
+ 156   4                                              Lcd4_Set_Cursor(2,1);Lcd4_Write_String("SNN");  break;
+ 157   4                                      case 3:  
+ 158   4                                              Lcd4_Set_Cursor(2,1);Lcd4_Write_String("SLS");  break;
+ 159   4                                      case 4:  
+ 160   4                                              Lcd4_Set_Cursor(2,1);Lcd4_Write_String("RAB");  break;
+ 161   4                                      case 5:  
+ 162   4                                              Lcd4_Set_Cursor(2,1);Lcd4_Write_String("KMS");  break;
+ 163   4                                      case 6:  
+ 164   4                                              Lcd4_Set_Cursor(2,1);Lcd4_Write_String("JMT");  break;
+ 165   4                                      case 7:  
+ 166   4                                              Lcd4_Set_Cursor(2,1);Lcd4_Write_String("SBT");  break;
+ 167   4                              }
+ 168   3                              st1[0] = 48 + (tgl / 10); st1[1] = 48 + (tgl % 10);
+ 169   3                              Lcd4_Set_Cursor(2,6);Lcd4_Write_String(st1);
+ 170   3                              switch (bln){
+ 171   4                                      case 1:  
+ 172   4                                              Lcd4_Set_Cursor(2,9);Lcd4_Write_String("JAN");  break;
+ 173   4                                      case 2:  
+ 174   4                                              Lcd4_Set_Cursor(2,9);Lcd4_Write_String("FEB");  break;
+ 175   4                                      case 3:  
+ 176   4                                              Lcd4_Set_Cursor(2,9);Lcd4_Write_String("MAR");  break;
+ 177   4                                      case 4:  
+ 178   4                                              Lcd4_Set_Cursor(2,9);Lcd4_Write_String("APR");  break;
+ 179   4                                      case 5:  
+C51 COMPILER V8.16   AT89C51RC2                                                            10/08/2013 11:10:29 PAGE 4   
+
+ 180   4                                              Lcd4_Set_Cursor(2,9);Lcd4_Write_String("MEI");  break;
+ 181   4                                      case 6:  
+ 182   4                                              Lcd4_Set_Cursor(2,9);Lcd4_Write_String("JUN");  break;
+ 183   4                                      case 7:  
+ 184   4                                              Lcd4_Set_Cursor(2,9);Lcd4_Write_String("JUL");  break;
+ 185   4                                      case 8:  
+ 186   4                                              Lcd4_Set_Cursor(2,9);Lcd4_Write_String("AGS");  break;
+ 187   4                                      case 9:  
+ 188   4                                              Lcd4_Set_Cursor(2,9);Lcd4_Write_String("SEP");  break;
+ 189   4                                      case 10:  
+ 190   4                                              Lcd4_Set_Cursor(2,9);Lcd4_Write_String("OKT");  break;
+ 191   4                                      case 11:  
+ 192   4                                              Lcd4_Set_Cursor(2,9);Lcd4_Write_String("NOV");  break;
+ 193   4                                      case 12:  
+ 194   4                                              Lcd4_Set_Cursor(2,9);Lcd4_Write_String("DES");  break;
+ 195   4                              }
+ 196   3                              st1[0] = 48 + (thn / 1000); st1[1] = 48 + ((thn % 1000)/100);
+ 197   3                              Lcd4_Set_Cursor(2,13);Lcd4_Write_String(st1);
+ 198   3                              st1[0] = 48 + ((thn %100)/10); st1[1] = 48 + (thn %10);
+ 199   3                              Lcd4_Set_Cursor(2,15);Lcd4_Write_String(st1);
+ 200   3                              
+ 201   3                              st1[0] =  48 + (jam / 10);       st1[1] = 48 + (jam % 10);                                                      // baris 3
+ 202   3                              Lcd4_Set_Cursor(3,0);Lcd4_Write_String(st1);
+ 203   3                              st1[0] =  48 + (mnt / 10);       st1[1] = 48 + (mnt % 10);
+ 204   3                              Lcd4_Set_Cursor(3,3);Lcd4_Write_String(st1);
+ 205   3                              st1[0] =  48 + (dtk / 10);       st1[1] = 48 + (dtk % 10);
+ 206   3                              Lcd4_Set_Cursor(3,6);Lcd4_Write_String(st1);
+ 207   3                              st1[0] =  48 + (proghar/ 10);st1[1] = 48 + (proghar % 10);
+ 208   3                              Lcd4_Set_Cursor(3,11);Lcd4_Write_String(st1);
+ 209   3                              st1[0] =  48 + (plan/ 10);st1[1] = 48 + (plan % 10);
+ 210   3                              Lcd4_Set_Cursor(3,16);Lcd4_Write_String(st1);
+ 211   3                      }
+ 212   2                      key = get_key();
+ 213   2              }
+ 214   1              switch (key){
+ 215   2                      case '1':       while(key=='1'){key=get_key();}InputSetting(); break;
+ 216   2                      case '2':       while(key=='2'){key=get_key();}Monitor(); break;
+ 217   2              }
+ 218   1      }
+ 219          
+ 220          void InputSetting(){    
+ 221   1              Lcd4_Clear();Delay(50);
+ 222   1              Lcd4_Set_Cursor(1,0);Lcd4_Write_String("Input Setting");
+ 223   1              Lcd4_Set_Cursor(2,0);Lcd4_Write_String("[1] Keypad");
+ 224   1              Lcd4_Set_Cursor(3,0);Lcd4_Write_String("[2] Komputer (ser)");
+ 225   1              Lcd4_Set_Cursor(4,0);Lcd4_Write_String("[3] Komputer (int)");
+ 226   1              
+ 227   1              while (key != CAN){
+ 228   2                      key = get_key();
+ 229   2                      
+ 230   2                      switch (key){
+ 231   3                              case '1': while(key=='1'){key=get_key();}InputKeypad(); break;
+ 232   3                              case '2': while(key=='2'){key=get_key();}InputKompSer(); break;
+ 233   3                              case '3': while(key=='3'){key=get_key();}InputKompInt(); break;
+ 234   3                      } 
+ 235   2              }
+ 236   1              while(key==CAN){key=get_key();}
+ 237   1              Lcd4_Clear();Delay(50);
+ 238   1      }
+ 239          
+ 240          void Monitor(){                                 
+ 241   1              temp = 61;
+C51 COMPILER V8.16   AT89C51RC2                                                            10/08/2013 11:10:29 PAGE 5   
+
+ 242   1              Lcd4_Clear();Delay(50);
+ 243   1              Lcd4_Set_Cursor(1,0);Lcd4_Write_String("Monitor");
+ 244   1              Lcd4_Set_Cursor(2,0);Lcd4_Write_String("RED");
+ 245   1              Lcd4_Set_Cursor(3,0);Lcd4_Write_String("GRE");
+ 246   1              
+ 247   1              while (key != CAN){
+ 248   2                      if(temp != dtk){
+ 249   3                              temp = dtk;
+ 250   3                              UpdateProgramHarian();UpdatePlan();UpdateLampu();
+ 251   3                              
+ 252   3                              if (((lampu >> 0) & 1) == 1){
+ 253   4                                      Lcd4_Set_Cursor(2,4); Lcd4_Write_Char(' ');
+ 254   4                                      Lcd4_Set_Cursor(3,4); Lcd4_Write_Char('*');}
+ 255   3                              else if (((lampu >> 0) & 1) == 0){
+ 256   4                                      Lcd4_Set_Cursor(2,4); Lcd4_Write_Char('*');
+ 257   4                                      Lcd4_Set_Cursor(3,4); Lcd4_Write_Char(' ');}    
+ 258   3                                                                                                              
+ 259   3                              if (((lampu >> 1) & 1) == 1){
+ 260   4                                      Lcd4_Set_Cursor(2,5); Lcd4_Write_Char(' ');
+ 261   4                                      Lcd4_Set_Cursor(3,5); Lcd4_Write_Char('*');}
+ 262   3                              else if (((lampu >> 1) & 1) == 0){
+ 263   4                                      Lcd4_Set_Cursor(2,5); Lcd4_Write_Char('*');
+ 264   4                                      Lcd4_Set_Cursor(3,5); Lcd4_Write_Char(' ');}
+ 265   3              
+ 266   3                              if (((lampu >> 2) & 1) == 1){
+ 267   4                                      Lcd4_Set_Cursor(2,6); Lcd4_Write_Char(' ');
+ 268   4                                      Lcd4_Set_Cursor(3,6); Lcd4_Write_Char('*');}
+ 269   3                              else if (((lampu >> 2) & 1) == 0){
+ 270   4                                      Lcd4_Set_Cursor(2,6); Lcd4_Write_Char('*');
+ 271   4                                      Lcd4_Set_Cursor(3,6); Lcd4_Write_Char(' ');}
+ 272   3      
+ 273   3                              if (((lampu >> 3) & 1) == 1){
+ 274   4                                      Lcd4_Set_Cursor(2,7); Lcd4_Write_Char(' ');
+ 275   4                                      Lcd4_Set_Cursor(3,7); Lcd4_Write_Char('*');}
+ 276   3                              else if (((lampu >> 3) & 1) == 0){
+ 277   4                                      Lcd4_Set_Cursor(2,7); Lcd4_Write_Char('*');
+ 278   4                                      Lcd4_Set_Cursor(3,7); Lcd4_Write_Char(' ');}
+ 279   3      
+ 280   3                              if (((lampu >> 4) & 1) == 1){
+ 281   4                                      Lcd4_Set_Cursor(2,8); Lcd4_Write_Char(' ');
+ 282   4                                      Lcd4_Set_Cursor(3,8); Lcd4_Write_Char('*');}
+ 283   3                              else if (((lampu >> 4) & 1) == 0){
+ 284   4                                      Lcd4_Set_Cursor(2,8); Lcd4_Write_Char('*');
+ 285   4                                      Lcd4_Set_Cursor(3,8); Lcd4_Write_Char(' ');}
+ 286   3      
+ 287   3                              if (((lampu >> 5) & 1) == 1){
+ 288   4                                      Lcd4_Set_Cursor(2,9); Lcd4_Write_Char(' ');
+ 289   4                                      Lcd4_Set_Cursor(3,9); Lcd4_Write_Char('*');}
+ 290   3                              else if (((lampu >> 5) & 1) == 0){
+ 291   4                                      Lcd4_Set_Cursor(2,9); Lcd4_Write_Char('*');
+ 292   4                                      Lcd4_Set_Cursor(3,9); Lcd4_Write_Char(' ');}
+ 293   3      
+ 294   3                              if (((lampu >> 6) & 1) == 1){
+ 295   4                                      Lcd4_Set_Cursor(2,10); Lcd4_Write_Char(' ');
+ 296   4                                      Lcd4_Set_Cursor(3,10); Lcd4_Write_Char('*');}
+ 297   3                              else if (((lampu >> 6) & 1) == 0){
+ 298   4                                      Lcd4_Set_Cursor(2,10); Lcd4_Write_Char('*');
+ 299   4                                      Lcd4_Set_Cursor(3,10); Lcd4_Write_Char(' ');}
+ 300   3      
+ 301   3                              if (((lampu >> 7) & 1) == 1){
+ 302   4                                      Lcd4_Set_Cursor(2,11); Lcd4_Write_Char(' ');
+ 303   4                                      Lcd4_Set_Cursor(3,11); Lcd4_Write_Char('*');}
+C51 COMPILER V8.16   AT89C51RC2                                                            10/08/2013 11:10:29 PAGE 6   
+
+ 304   3                              else if (((lampu >> 7) & 1) == 0){
+ 305   4                                      Lcd4_Set_Cursor(2,11); Lcd4_Write_Char('*');
+ 306   4                                      Lcd4_Set_Cursor(3,11); Lcd4_Write_Char(' ');}
+ 307   3                      }
+ 308   2                      key = get_key();
+ 309   2              }
+ 310   1              while(key==CAN){key=get_key();}
+ 311   1              Lcd4_Clear();Delay(50);
+ 312   1      }
+ 313          
+ 314          void InputKeypad(){                             
+ 315   1              baris = 0;
+ 316   1              Lcd4_Clear();Delay(50);
+ 317   1              Lcd4_Set_Cursor(1,0);Lcd4_Write_String("MAIN MENU [1]-[6]   ");
+ 318   1              Lcd4_Set_Cursor(2,0);Lcd4_Write_String("[CAN]EXIT           ");
+ 319   1              Lcd4_Set_Cursor(3,0);Lcd4_Write_String("[1] Set waktu       ");
+ 320   1              Lcd4_Set_Cursor(4,0);Lcd4_Write_String("[2] Set tanggal     ");
+ 321   1              
+ 322   1              while (key != CAN){
+ 323   2                      key = get_key();
+ 324   2                      
+ 325   2                      if((key==UP) ||(key==DOWN)){
+ 326   3                              if(key==UP){
+ 327   4                                      if(baris>0)
+ 328   4                                              baris--;
+ 329   4                              }
+ 330   3                              if(key==DOWN){
+ 331   4                                      if(baris<4)
+ 332   4                                              baris++;
+ 333   4                              }
+ 334   3                              
+ 335   3                              if((baris>=0) && (baris<=0))                                
+ 336   3                                      str[0 - baris]="MAIN MENU [1]-[6]   ";
+ 337   3                              if((baris>=0) && (baris<=1))
+ 338   3                                      str[1 - baris]="[CAN]EXIT           ";
+ 339   3                              if((baris>=0) && (baris<=2))
+ 340   3                                      str[2 - baris]="[1] Set waktu       ";
+ 341   3                              if((baris>=0) && (baris<=3))
+ 342   3                                      str[3 - baris]="[2] Set tanggal     ";
+ 343   3                              if((baris>=1) && (baris<=4))
+ 344   3                                      str[4 - baris]="[3] Set hari libur  ";
+ 345   3                              if((baris>=2) && (baris<=4))
+ 346   3                                      str[5 - baris]="[4] Set startup     ";
+ 347   3                              if((baris>=3) && (baris<=4))
+ 348   3                                      str[6 - baris]="[5] Set PLAN        ";
+ 349   3                              if((baris>=4) && (baris<=4))
+ 350   3                                      str[7 - baris]="[6] Set prog harian ";
+ 351   3                              
+ 352   3                              Lcd4_Set_Cursor(1,0);Lcd4_Write_String(str[0]);
+ 353   3                              Lcd4_Set_Cursor(2,0);Lcd4_Write_String(str[1]);
+ 354   3                              Lcd4_Set_Cursor(3,0);Lcd4_Write_String(str[2]);
+ 355   3                              Lcd4_Set_Cursor(4,0);Lcd4_Write_String(str[3]);
+ 356   3                      }
+ 357   2                      
+ 358   2                      switch (key){
+ 359   3                              case '1': while(key=='1'){key = get_key();}baris = 0;SetWaktu(); break;
+ 360   3                              case '2': while(key=='2'){key = get_key();}baris = 0;SetTanggal(); break;
+ 361   3                              case '3': while(key=='3'){key = get_key();}baris = 0;SetHoliday(); break;
+ 362   3                              case '4': while(key=='4'){key = get_key();}baris = 0;SetStartUp(); break;
+ 363   3                              case '5': while(key=='5'){key = get_key();}baris = 0;SetPlan(); break;
+ 364   3                              case '6': while(key=='6'){key = get_key();}baris = 0;SetProgramHarian(); break;
+ 365   3                      }  
+C51 COMPILER V8.16   AT89C51RC2                                                            10/08/2013 11:10:29 PAGE 7   
+
+ 366   2              }
+ 367   1              while(key==CAN){key=get_key();}
+ 368   1              Lcd4_Clear();Delay(50);
+ 369   1              Lcd4_Set_Cursor(1,0);Lcd4_Write_String("Input Setting");
+ 370   1              Lcd4_Set_Cursor(2,0);Lcd4_Write_String("[1] Keypad");
+ 371   1              Lcd4_Set_Cursor(3,0);Lcd4_Write_String("[2] Komputer (ser)");
+ 372   1              Lcd4_Set_Cursor(4,0);Lcd4_Write_String("[3] Komputer (int)");
+ 373   1      }
+ 374          
+ 375          void InputKompSer(){
+ 376   1              Lcd4_Clear();Delay(50);
+ 377   1              Lcd4_Set_Cursor(1,0);Lcd4_Write_String("Komputer (serial)");
+ 378   1      }
+ 379          
+ 380          void InputKompInt(){
+ 381   1              Lcd4_Clear();Delay(50);
+ 382   1              Lcd4_Set_Cursor(1,0);Lcd4_Write_String("Komputer (internet)");
+ 383   1      }
+ 384          
+ 385          void SetWaktu(){                                // 1. SetWaktu                                          v
+ 386   1              Lcd4_Clear();Delay(50);
+ 387   1              Lcd4_Set_Cursor(1,3);Lcd4_Write_String("SET WAKTU");
+ 388   1              Lcd4_Set_Cursor(2,2);Lcd4_Write_String(":  :");
+ 389   1              Lcd4_Set_Cursor(3,0);Lcd4_Write_String("[COR]EDIT/SAVE");
+ 390   1              Lcd4_Set_Cursor(4,0);Lcd4_Write_String("[CAN]EXIT");
+ 391   1              
+ 392   1              while(key != CAN){              
+ 393   2                      st1[0]= '0'+ jam/10;st1[1]= '0'+ jam%10;
+ 394   2                      Lcd4_Set_Cursor(2,0);Lcd4_Write_String(st1);
+ 395   2                      st1[0]= '0'+ mnt/10;st1[1]= '0'+ mnt%10;
+ 396   2                      Lcd4_Set_Cursor(2,3);Lcd4_Write_String(st1);
+ 397   2                      st1[0]= '0'+ dtk/10;st1[1]= '0'+ dtk%10;
+ 398   2                      Lcd4_Set_Cursor(2,6);Lcd4_Write_String(st1);
+ 399   2                      
+ 400   2                      key = get_key();         //cuma scanning keypad         
+ 401   2      
+ 402   2                      if(key == COR){
+ 403   3                              while(key==COR){key=get_key();}
+ 404   3                              while(key != COR){                                                              
+ 405   4                                      st1[0]= '0'+ jam/10;st1[1]= '0'+ jam%10;
+ 406   4                                      Lcd4_Set_Cursor(2,0);Lcd4_Write_String(st1);
+ 407   4                                      st1[0]= '0'+ mnt/10;st1[1]= '0'+ mnt%10;
+ 408   4                                      Lcd4_Set_Cursor(2,3);Lcd4_Write_String(st1);
+ 409   4                                      st1[0]= '0'+ dtk/10;st1[1]= '0'+ dtk%10;
+ 410   4                                      Lcd4_Set_Cursor(2,6);Lcd4_Write_String(st1);
+ 411   4                                      Delay(50);
+ 412   4                                      key = get_key();
+ 413   4                                      
+ 414   4                                      switch(stateset){
+ 415   5                                              case 0: 
+ 416   5                                                      Lcd4_Set_Cursor(2,0);                                           
+ 417   5                                                      if((key>='0') && (key<='9')){   
+ 418   6                                                              jam = (jam % 10) + ((key-'0') *10);                                                     
+ 419   6                                                              temp= key;
+ 420   6                                                              while(key==temp){key=get_key();}
+ 421   6                                                              stateset=1;
+ 422   6                                                      }                                                               
+ 423   5                                                      break;
+ 424   5                                              case 1: 
+ 425   5                                                      Lcd4_Set_Cursor(2,1);                                                   
+ 426   5                                                      if((key>='0') && (key<='9')){   
+ 427   6                                                              jam = (jam - (jam % 10)) + (key-'0');                                                   
+C51 COMPILER V8.16   AT89C51RC2                                                            10/08/2013 11:10:29 PAGE 8   
+
+ 428   6                                                              temp= key;
+ 429   6                                                              while(key==temp){key=get_key();}
+ 430   6                                                              stateset=2;
+ 431   6                                                      }
+ 432   5                                                      break;
+ 433   5                                              case 2: 
+ 434   5                                                      Lcd4_Set_Cursor(2,3);
+ 435   5                                                      if((key>='0') && (key<='9')){                   
+ 436   6                                                              mnt = (mnt % 10) + ((key-'0') *10);                                             
+ 437   6                                                              temp= key;
+ 438   6                                                              while(key==temp){key=get_key();}
+ 439   6                                                              stateset=3;
+ 440   6                                                      }
+ 441   5                                                      break;
+ 442   5                                              case 3:
+ 443   5                                                      Lcd4_Set_Cursor(2,4);
+ 444   5                                                      if((key>='0') && (key<='9')){                                           
+ 445   6                                                              mnt = (mnt - (mnt % 10)) + (key-'0');                                   
+ 446   6                                                              temp= key;
+ 447   6                                                              while(key==temp){key=get_key();}
+ 448   6                                                              stateset=4;
+ 449   6                                                      }
+ 450   5                                                      break;
+ 451   5                                              case 4:
+ 452   5                                                      Lcd4_Set_Cursor(2,6);
+ 453   5                                                      if((key>='0') && (key<='9')){                   
+ 454   6                                                              dtk = (dtk % 10) + ((key-'0') *10);                                                     
+ 455   6                                                              temp= key;
+ 456   6                                                              while(key==temp){key=get_key();}
+ 457   6                                                              stateset=5;
+ 458   6                                                      }
+ 459   5                                                      break;
+ 460   5                                              case 5: 
+ 461   5                                                      Lcd4_Set_Cursor(2,7);
+ 462   5                                                      if((key>='0') && (key<='9')){                                                   
+ 463   6                                                              dtk = (dtk - (dtk % 10)) + (key-'0');                           
+ 464   6                                                              temp= key;
+ 465   6                                                              while(key==temp){key=get_key();}
+ 466   6                                                              stateset=0;                                                             
+ 467   6                                                      }
+ 468   5                                                      break;
+ 469   5                                      }
+ 470   4                                      Lcd4_Write_Char('_');Delay(50);
+ 471   4                              }       
+ 472   3                              while(key==COR){key=get_key();}
+ 473   3                              stateset=0;             
+ 474   3                      }                                                                                                                                               
+ 475   2              }
+ 476   1              while(key==CAN){key = get_key();}       
+ 477   1              Lcd4_Clear();Delay(50);
+ 478   1              Lcd4_Set_Cursor(1,0);Lcd4_Write_String("MAIN MENU [1]-[6]   ");
+ 479   1              Lcd4_Set_Cursor(2,0);Lcd4_Write_String("[CAN]EXIT           ");
+ 480   1              Lcd4_Set_Cursor(3,0);Lcd4_Write_String("[1] Set waktu       ");
+ 481   1              Lcd4_Set_Cursor(4,0);Lcd4_Write_String("[2] Set tanggal     ");
+ 482   1      }
+ 483          
+ 484          void SetTanggal(){                              // 2. SetTanggal                                        v
+ 485   1              Lcd4_Clear();Delay(50);
+ 486   1              Lcd4_Set_Cursor(1,3);Lcd4_Write_String("SET TANGGAL");
+ 487   1              Lcd4_Set_Cursor(2,0);Lcd4_Write_String(" ,   /  /");
+ 488   1              Lcd4_Set_Cursor(3,0);Lcd4_Write_String("[COR]EDIT/SAVE");
+ 489   1              Lcd4_Set_Cursor(4,0);Lcd4_Write_String("[CAN]EXIT");
+C51 COMPILER V8.16   AT89C51RC2                                                            10/08/2013 11:10:29 PAGE 9   
+
+ 490   1              
+ 491   1              while(key != CAN){              
+ 492   2                      Lcd4_Set_Cursor(2,0);Lcd4_Write_Char(hr+'0');
+ 493   2                      st1[0]= '0'+ tgl/10;st1[1]= '0'+ tgl%10;
+ 494   2                      Lcd4_Set_Cursor(2,3);Lcd4_Write_String(st1);
+ 495   2                      st1[0]= '0'+ bln/10;st1[1]= '0'+ bln%10;
+ 496   2                      Lcd4_Set_Cursor(2,6);Lcd4_Write_String(st1);
+ 497   2                      st1[0]= '0'+ thn/1000;st1[1]= '0'+ (thn%1000)/100;
+ 498   2                      Lcd4_Set_Cursor(2,9);Lcd4_Write_String(st1);
+ 499   2                      st1[0]= '0'+ (thn%100)/10;st1[1]= '0'+ thn%10;
+ 500   2                      Lcd4_Set_Cursor(2,11);Lcd4_Write_String(st1);
+ 501   2                      
+ 502   2                      key = get_key();         //cuma scanning keypad         
+ 503   2      
+ 504   2                      if(key == COR){
+ 505   3                              while(key==COR){key=get_key();}
+ 506   3                              while(key != COR){                                                              
+ 507   4                                      Lcd4_Set_Cursor(2,0);Lcd4_Write_Char(hr+'0');
+ 508   4                                      st1[0]= '0'+ tgl/10;st1[1]= '0'+ tgl%10;
+ 509   4                                      Lcd4_Set_Cursor(2,3);Lcd4_Write_String(st1);
+ 510   4                                      st1[0]= '0'+ bln/10;st1[1]= '0'+ bln%10;
+ 511   4                                      Lcd4_Set_Cursor(2,6);Lcd4_Write_String(st1);
+ 512   4                                      st1[0]= '0'+ thn/1000;st1[1]= '0'+ (thn%1000)/100;
+ 513   4                                      Lcd4_Set_Cursor(2,9);Lcd4_Write_String(st1);
+ 514   4                                      st1[0]= '0'+ (thn%100)/10;st1[1]= '0'+ thn%10;
+ 515   4                                      Lcd4_Set_Cursor(2,11);Lcd4_Write_String(st1);
+ 516   4                                      Delay(50);
+ 517   4                                      key = get_key();
+ 518   4                                      
+ 519   4                                      switch(stateset){
+ 520   5                                              case 0: 
+ 521   5                                                      Lcd4_Set_Cursor(2,0);                                           
+ 522   5                                                      if((key>='0') && (key<='9')){   
+ 523   6                                                              hr = key-'0';                                                   
+ 524   6                                                              temp= key;
+ 525   6                                                              while(key==temp){key=get_key();}
+ 526   6                                                              stateset=1;
+ 527   6                                                      }                                                               
+ 528   5                                                      break;
+ 529   5                                              case 1: 
+ 530   5                                                      Lcd4_Set_Cursor(2,3);                                                   
+ 531   5                                                      if((key>='0') && (key<='9')){   
+ 532   6                                                              tgl = (tgl % 10) + ((key-'0') *10);                                                     
+ 533   6                                                              temp= key;
+ 534   6                                                              while(key==temp){key=get_key();}
+ 535   6                                                              stateset=2;
+ 536   6                                                      }
+ 537   5                                                      break;
+ 538   5                                              case 2: 
+ 539   5                                                      Lcd4_Set_Cursor(2,4);
+ 540   5                                                      if((key>='0') && (key<='9')){                   
+ 541   6                                                              tgl = (tgl - (tgl % 10)) + (key-'0');                                   
+ 542   6                                                              temp= key;
+ 543   6                                                              while(key==temp){key=get_key();}
+ 544   6                                                              stateset=3;
+ 545   6                                                      }
+ 546   5                                                      break;
+ 547   5                                              case 3:
+ 548   5                                                      Lcd4_Set_Cursor(2,6);
+ 549   5                                                      if((key>='0') && (key<='9')){                                           
+ 550   6                                                              bln = (bln % 10) + ((key-'0') *10);                                                     
+ 551   6                                                              temp= key;
+C51 COMPILER V8.16   AT89C51RC2                                                            10/08/2013 11:10:29 PAGE 10  
+
+ 552   6                                                              while(key==temp){key=get_key();}
+ 553   6                                                              stateset=4;
+ 554   6                                                      }
+ 555   5                                                      break;
+ 556   5                                              case 4:
+ 557   5                                                      Lcd4_Set_Cursor(2,7);
+ 558   5                                                      if((key>='0') && (key<='9')){                   
+ 559   6                                                              bln = (bln - (bln % 10)) + (key-'0');                                   
+ 560   6                                                              temp= key;
+ 561   6                                                              while(key==temp){key=get_key();}
+ 562   6                                                              stateset=5;
+ 563   6                                                      }
+ 564   5                                                      break;
+ 565   5                                              case 5: 
+ 566   5                                                      Lcd4_Set_Cursor(2,9);
+ 567   5                                                      if((key>='0') && (key<='9')){                                                   
+ 568   6                                                              thn = (thn % 1000) + ((key-'0')*1000);                          
+ 569   6                                                              temp= key;
+ 570   6                                                              while(key==temp){key=get_key();}
+ 571   6                                                              stateset=6;                                                             
+ 572   6                                                      }
+ 573   5                                                      break;
+ 574   5                                              case 6: 
+ 575   5                                                      Lcd4_Set_Cursor(2,10);
+ 576   5                                                      if((key>='0') && (key<='9')){                                                   
+ 577   6                                                              thn = (thn - (thn%1000)) + ((key-'0')*100) + (thn%100);                         
+ 578   6                                                              temp= key;
+ 579   6                                                              while(key==temp){key=get_key();}
+ 580   6                                                              stateset=7;                                                             
+ 581   6                                                      }
+ 582   5                                                      break;
+ 583   5                                              case 7: 
+ 584   5                                                      Lcd4_Set_Cursor(2,11);
+ 585   5                                                      if((key>='0') && (key<='9')){                                                   
+ 586   6                                                              thn = (thn - (thn % 100)) + ((key-'0')*10) + (thn%10);                          
+ 587   6                                                              temp= key;
+ 588   6                                                              while(key==temp){key=get_key();}
+ 589   6                                                              stateset=8;                                                             
+ 590   6                                                      }
+ 591   5                                                      break;
+ 592   5                                              case 8: 
+ 593   5                                                      Lcd4_Set_Cursor(2,12);
+ 594   5                                                      if((key>='0') && (key<='9')){                                                   
+ 595   6                                                              thn = (thn-(thn%10)) + (key-'0');                               
+ 596   6                                                              temp= key;
+ 597   6                                                              while(key==temp){key=get_key();}
+ 598   6                                                              stateset=0;                                                             
+ 599   6                                                      }
+ 600   5                                                      break;
+ 601   5                                      }
+ 602   4                                      Lcd4_Write_Char('_');Delay(50);
+ 603   4                              }       
+ 604   3                              while(key==COR){key=get_key();}
+ 605   3                              stateset=0;             
+ 606   3                      }                                                                                                                                               
+ 607   2              }
+ 608   1              while(key==CAN){key = get_key();}       
+ 609   1              Lcd4_Clear();Delay(50);
+ 610   1              Lcd4_Set_Cursor(1,0);Lcd4_Write_String("MAIN MENU [1]-[6]   ");
+ 611   1              Lcd4_Set_Cursor(2,0);Lcd4_Write_String("[CAN]EXIT           ");
+ 612   1              Lcd4_Set_Cursor(3,0);Lcd4_Write_String("[1] Set waktu       ");
+ 613   1              Lcd4_Set_Cursor(4,0);Lcd4_Write_String("[2] Set tanggal     ");
+C51 COMPILER V8.16   AT89C51RC2                                                            10/08/2013 11:10:29 PAGE 11  
+
+ 614   1      }
+ 615          
+ 616          void SetHoliday(){                              // 3. SetHoliday                                                
+ 617   1              Lcd4_Clear();Delay(50); 
+ 618   1              
+ 619   1              while(key != CAN){                              
+ 620   2                      key=get_key();
+ 621   2              }
+ 622   1              while(key==CAN){key=get_key();}
+ 623   1              Lcd4_Clear();Delay(50);
+ 624   1              Lcd4_Set_Cursor(1,0);Lcd4_Write_String("MAIN MENU [1]-[6]   ");
+ 625   1              Lcd4_Set_Cursor(2,0);Lcd4_Write_String("[CAN]EXIT           ");
+ 626   1              Lcd4_Set_Cursor(3,0);Lcd4_Write_String("[1] Set waktu       ");
+ 627   1              Lcd4_Set_Cursor(4,0);Lcd4_Write_String("[2] Set tanggal     ");
+ 628   1      }
+ 629          
+ 630          void SetStartUp(){                              // 4. SetStartUp                                        v
+ 631   1              Lcd4_Clear();Delay(50);
+ 632   1              Lcd4_Set_Cursor(1,2);Lcd4_Write_String("SET STARTUP");
+ 633   1              Lcd4_Set_Cursor(2,0);Lcd4_Write_String("Waktu Start Up:");
+ 634   1              Lcd4_Set_Cursor(3,0);Lcd4_Write_String("[COR]EDIT/SAVE");
+ 635   1              Lcd4_Set_Cursor(4,0);Lcd4_Write_String("[CAN]EXIT");
+ 636   1              
+ 637   1              while(key != CAN){              
+ 638   2                      st1[0]= '0'+ dtkstartup/10;st1[1]= '0'+ dtkstartup%10;
+ 639   2                      Lcd4_Set_Cursor(2,16);Lcd4_Write_String(st1);
+ 640   2                      
+ 641   2                      key = get_key();
+ 642   2                      
+ 643   2                      if(key == COR){
+ 644   3                              while(key==COR){key=get_key();}
+ 645   3                              while (key != COR){                                                                     
+ 646   4                                      key = get_key();
+ 647   4                                      st1[0]= '0'+ dtkstartup/10;st1[1]= '0'+ dtkstartup%10;
+ 648   4                                      Lcd4_Set_Cursor(2,16);Lcd4_Write_String(st1);Delay(50);
+ 649   4                                      
+ 650   4                                      switch(stateset){
+ 651   5                                              case 0:
+ 652   5                                                      Lcd4_Set_Cursor(2,16);  
+ 653   5                                                      if((key>='0') && (key<='9')){
+ 654   6                                                              dtkstartup = (dtkstartup % 10) + ((key-'0') *10);
+ 655   6                                                              temp=key;
+ 656   6                                                              while(key==temp){key=get_key();}
+ 657   6                                                              stateset=1;             
+ 658   6                                                      }
+ 659   5                                                      break;
+ 660   5                                              case 1:
+ 661   5                                                      Lcd4_Set_Cursor(2,17);                                                  
+ 662   5                                                      if((key>='0') && (key<='9')){
+ 663   6                                                              dtkstartup = (dtkstartup - (dtkstartup % 10)) + (key-'0');
+ 664   6                                                              temp=key;
+ 665   6                                                              while(key==temp){key=get_key();}
+ 666   6                                                              stateset=0;
+ 667   6                                                      }
+ 668   5                                                      break;
+ 669   5                                      }
+ 670   4                                      Lcd4_Write_Char('_');Delay(50);
+ 671   4                              }
+ 672   3                              while(key==COR){key=get_key();} 
+ 673   3                              stateset=0;
+ 674   3                      }                       
+ 675   2              }
+C51 COMPILER V8.16   AT89C51RC2                                                            10/08/2013 11:10:29 PAGE 12  
+
+ 676   1              while(key==CAN){key = get_key();}       
+ 677   1              Lcd4_Clear();Delay(50); 
+ 678   1              Lcd4_Set_Cursor(1,0);Lcd4_Write_String("MAIN MENU [1]-[6]   ");
+ 679   1              Lcd4_Set_Cursor(2,0);Lcd4_Write_String("[CAN]EXIT           ");
+ 680   1              Lcd4_Set_Cursor(3,0);Lcd4_Write_String("[1] Set waktu       ");
+ 681   1              Lcd4_Set_Cursor(4,0);Lcd4_Write_String("[2] Set tanggal     ");
+ 682   1      }
+ 683          
+ 684          void SetPlan(){                                 // 5. SetPlan                                                   
+ 685   1              planpilihan=1;
+ 686   1              Lcd4_Clear();Delay(50);
+ 687   1              Lcd4_Set_Cursor(1,0); Lcd4_Write_String("Pilih Plan");
+ 688   1              Lcd4_Set_Cursor(2,0);Lcd4_Write_String("Plan:");
+ 689   1              Lcd4_Set_Cursor(3,0);Lcd4_Write_String("[COR]EDIT  [CAN]EXIT");
+ 690   1              
+ 691   1              while(key != CAN){              
+ 692   2                      key = get_key();
+ 693   2                      st1[0]= '0'+ planpilihan/10;st1[1]= '0'+ planpilihan%10;
+ 694   2                      Lcd4_Set_Cursor(2,6);Lcd4_Write_String(st1);Delay(50);
+ 695   2                                      
+ 696   2                      switch(stateset){
+ 697   3                              case 0:
+ 698   3                                      Lcd4_Set_Cursor(2,6);   
+ 699   3                                      if((key>='0') && (key<='9')){
+ 700   4                                              planpilihan = (planpilihan % 10) + ((key-'0') *10);
+ 701   4                                              temp=key;
+ 702   4                                              while(key==temp){key=get_key();}
+ 703   4                                              stateset=1;             
+ 704   4                                      }
+ 705   3                                      break;
+ 706   3                              case 1:
+ 707   3                                      Lcd4_Set_Cursor(2,7);                                                   
+ 708   3                                      if((key>='0') && (key<='9')){
+ 709   4                                              planpilihan = (planpilihan - (planpilihan % 10)) + (key-'0');
+ 710   4                                              temp=key;
+ 711   4                                              while(key==temp){key=get_key();}
+ 712   4                                              stateset=0;
+ 713   4                                      }
+ 714   3                                      break;
+ 715   3                      }
+ 716   2                      Lcd4_Write_Char('_');Delay(50);
+ 717   2                      
+ 718   2                      if(key==COR){
+ 719   3                              while(key==COR){key=get_key();} 
+ 720   3                              stateset=0;
+ 721   3                              SetPlanPilih();
+ 722   3                      }
+ 723   2              }               
+ 724   1              stateset=0;
+ 725   1              while(key==CAN){key=get_key();}
+ 726   1              Lcd4_Clear();Delay(50);
+ 727   1              Lcd4_Set_Cursor(1,0);Lcd4_Write_String("MAIN MENU [1]-[6]   ");
+ 728   1              Lcd4_Set_Cursor(2,0);Lcd4_Write_String("[CAN]EXIT           ");
+ 729   1              Lcd4_Set_Cursor(3,0);Lcd4_Write_String("[1] Set waktu       ");
+ 730   1              Lcd4_Set_Cursor(4,0);Lcd4_Write_String("[2] Set tanggal     ");
+ 731   1      }
+ 732          
+ 733          void SetPlanPilih(){                    // 5.a. SetPlanPilih
+ 734   1              char tlist[16];
+ 735   1              char tstr[20];
+ 736   1              baris=0;
+ 737   1              
+C51 COMPILER V8.16   AT89C51RC2                                                            10/08/2013 11:10:29 PAGE 13  
+
+ 738   1              switch(planpilihan){
+ 739   2                      case 1:
+ 740   2                              for(temp=0;temp<16;temp++)
+ 741   2                                      tlist[temp] = listplan1[temp];
+ 742   2                      break;
+ 743   2                      case 2:
+ 744   2                              for(temp=0;temp<16;temp++)
+ 745   2                                      tlist[temp] = listplan2[temp];
+ 746   2                      break;
+ 747   2                      /*case 3:
+ 748   2                              for(temp=0;temp<16;temp++)
+ 749   2                                      tlist[temp] = listplan3[temp];
+ 750   2                      break;
+ 751   2                      case 4:
+ 752   2                              for(temp=0;temp<16;temp++)
+ 753   2                                      tlist[temp] = listplan4[temp];
+ 754   2                      break;
+ 755   2                      case 5:
+ 756   2                              for(temp=0;temp<16;temp++)
+ 757   2                                      tlist[temp] = listplan5[temp];
+ 758   2                      break;
+ 759   2                      case 6:
+ 760   2                              for(temp=0;temp<16;temp++)
+ 761   2                                      tlist[temp] = listplan6[temp];
+ 762   2                      break;
+ 763   2                      case 7:
+ 764   2                              for(temp=0;temp<16;temp++)
+ 765   2                                      tlist[temp] = listplan7[temp];
+ 766   2                      break;
+ 767   2                      case 8:
+ 768   2                              for(temp=0;temp<16;temp++)
+ 769   2                                      tlist[temp] = listplan8[temp];
+ 770   2                      break;
+ 771   2                      case 9:
+ 772   2                              for(temp=0;temp<16;temp++)
+ 773   2                                      tlist[temp] = listplan9[temp];
+ 774   2                      break;
+ 775   2                      case 10:
+ 776   2                              for(temp=0;temp<16;temp++)
+ 777   2                                      tlist[temp] = listplan10[temp];
+ 778   2                      break;
+ 779   2                      case 11:
+ 780   2                              for(temp=0;temp<16;temp++)
+ 781   2                                      tlist[temp] = listplan11[temp];
+ 782   2                      break;
+ 783   2                      case 12:
+ 784   2                              for(temp=0;temp<16;temp++)
+ 785   2                                      tlist[temp] = listplan12[temp];
+ 786   2                      break;
+ 787   2                      case 13:
+ 788   2                              for(temp=0;temp<16;temp++)
+ 789   2                                      tlist[temp] = listplan13[temp];
+ 790   2                      break;
+ 791   2                      case 14:
+ 792   2                              for(temp=0;temp<16;temp++)
+ 793   2                                      tlist[temp] = listplan14[temp];
+ 794   2                      break;
+ 795   2                      case 15:
+ 796   2                              for(temp=0;temp<16;temp++)
+ 797   2                                      tlist[temp] = listplan15[temp];
+ 798   2                      break;
+ 799   2                      case 16:
+C51 COMPILER V8.16   AT89C51RC2                                                            10/08/2013 11:10:29 PAGE 14  
+
+ 800   2                              for(temp=0;temp<16;temp++)
+ 801   2                                      tlist[temp] = listplan16[temp];
+ 802   2                      break;*/
+ 803   2              }
+ 804   1              
+ 805   1              Lcd4_Clear();Delay(50);
+ 806   1              
+ 807   1              Lcd4_Set_Cursor(1,0);Lcd4_Write_String("Plan-");                        // baris 1
+ 808   1              st1[0]= '0'+ planpilihan/10;st1[1]= '0'+ planpilihan%10;st1[2]=0;
+ 809   1              Lcd4_Set_Cursor(1,5);Lcd4_Write_String(st1);
+ 810   1              
+ 811   1              Lcd4_Set_Cursor(2,0);Lcd4_Write_String("[COR] EDIT/SAVE");      // baris 2
+ 812   1              
+ 813   1              Lcd4_Set_Cursor(3,0);Lcd4_Write_String("1. L1:     -    ");     // baris 3
+ 814   1              st1[0] = (tlist[0]/100) + '0'; st1[1] = ((tlist[0]%100)/10) + '0';st1[2] = (tlist[0]%10) + '0';
+ 815   1              Lcd4_Set_Cursor(3,7);Lcd4_Write_String(st1);
+ 816   1              st1[0] = (tlist[1]/100) + '0'; st1[1] = ((tlist[1]%100)/10) + '0'; st1[2] = (tlist[1]%10) + '0';
+ 817   1              Lcd4_Set_Cursor(3,13);Lcd4_Write_String(st1);
+ 818   1              
+ 819   1              Lcd4_Set_Cursor(4,0);Lcd4_Write_String("2. L2:     -    ");     // baris 4
+ 820   1              st1[0] = (tlist[2]/100) + '0'; st1[1] = ((tlist[2]%100)/10) + '0'; st1[2] = (tlist[2]%10) + '0';
+ 821   1              Lcd4_Set_Cursor(4,7);Lcd4_Write_String(st1);
+ 822   1              st1[0] = (tlist[3]/100) + '0'; st1[1] = ((tlist[3]%100)/10) + '0'; st1[2] = (tlist[3]%10) + '0';
+ 823   1              Lcd4_Set_Cursor(4,13);Lcd4_Write_String(st1);
+ 824   1              
+ 825   1              while (key != CAN){
+ 826   2                      key = get_key();
+ 827   2                      if((key==UP) ||(key==DOWN)){
+ 828   3                              if(key==UP){
+ 829   4                                      if(baris>0)
+ 830   4                                              baris--;
+ 831   4                              }
+ 832   3                              if(key==DOWN){
+ 833   4                                      if(baris<4)
+ 834   4                                              baris++;
+ 835   4                              }
+ 836   3                              
+ 837   3                              if((baris>=0) && (baris<=0))                                
+ 838   3                                      strcpy(tstr,"Plan-   ");
+ 839   3                                      tstr[5]= '0'+ planpilihan/10;tstr[6]= '0'+ planpilihan%10;
+ 840   3                                      str[0 - baris]=tstr;
+ 841   3                              if((baris>=0) && (baris<=1))
+ 842   3                                      str[1 - baris]="[COR] EDIT/SAVE";
+ 843   3                              if((baris>=0) && (baris<=2))
+ 844   3                                      strcpy(tstr,"1. L1 =    -   ");
+ 845   3                                      tstr[8]=(tlist[0]/100)+'0';tstr[9]=((tlist[0]%100)/10)+'0';tstr[10]=(tlist[0]%10)+'0';
+ 846   3                                      tstr[12]=(tlist[1]/100)+'0';tstr[13]=((tlist[1]%100)/10)+'0';tstr[14]=(tlist[1]%10)+'0';
+ 847   3                                      str[2 - baris]=tstr;
+ 848   3                              if((baris>=0) && (baris<=3))
+ 849   3                                      strcpy(tstr,"2. L2 =    -   ");
+ 850   3                                      tstr[8]=(tlist[2]/100)+'0';tstr[9]=((tlist[2]%100)/10)+'0';tstr[10]=(tlist[2]%10)+'0';
+ 851   3                                      tstr[12]=(tlist[3]/100)+'0';tstr[13]=((tlist[3]%100)/10)+'0';tstr[14]=(tlist[3]%10)+'0';
+ 852   3                                      str[3 - baris]=tstr;
+ 853   3                              if((baris>=1) && (baris<=4))
+ 854   3                                      strcpy(tstr,"3. L3 =    -   ");
+ 855   3                                      tstr[8]=(tlist[4]/100)+'0';tstr[9]=((tlist[4]%100)/10)+'0';tstr[10]=(tlist[4]%10)+'0';
+ 856   3                                      tstr[12]=(tlist[5]/100)+'0';tstr[13]=((tlist[5]%100)/10)+'0';tstr[14]=(tlist[5]%10)+'0';
+ 857   3                                      str[4 - baris]=tstr;
+ 858   3                              if((baris>=2) && (baris<=5))
+ 859   3                                      strcpy(tstr,"4. L4 =    -   ");
+ 860   3                                      tstr[8]=(tlist[6]/100)+'0';tstr[9]=((tlist[6]%100)/10)+'0';tstr[10]=(tlist[6]%10)+'0';
+ 861   3                                      tstr[12]=(tlist[7]/100)+'0';tstr[13]=((tlist[7]%100)/10)+'0';tstr[14]=(tlist[7]%10)+'0';
+C51 COMPILER V8.16   AT89C51RC2                                                            10/08/2013 11:10:29 PAGE 15  
+
+ 862   3                                      str[5 - baris]=tstr;
+ 863   3                              if((baris>=3) && (baris<=6))
+ 864   3                                      strcpy(tstr,"5. L5 =    -   ");
+ 865   3                                      tstr[8]=(tlist[8]/100)+'0';tstr[9]=((tlist[8]%100)/10)+'0';tstr[10]=(tlist[8]%10)+'0';
+ 866   3                                      tstr[12]=(tlist[9]/100)+'0';tstr[13]=((tlist[9]%100)/10)+'0';tstr[14]=(tlist[9]%10)+'0';
+ 867   3                                      str[6 - baris]=tstr;
+ 868   3                              if((baris>=4) && (baris<=7))
+ 869   3                                      strcpy(tstr,"6. L6 =    -   ");
+ 870   3                                      tstr[8]=(tlist[10]/100)+'0';tstr[9]=((tlist[10]%100)/10)+'0';tstr[10]=(tlist[10]%10)+'0';
+ 871   3                                      tstr[12]=(tlist[11]/100)+'0';tstr[13]=((tlist[11]%100)/10)+'0';tstr[14]=(tlist[11]%10)+'0';
+ 872   3                                      str[7 - baris]=tstr;
+ 873   3                              if((baris>=5) && (baris<=7))
+ 874   3                                      strcpy(tstr,"7. L7 =    -   ");
+ 875   3                                      tstr[8]=(tlist[12]/100)+'0';tstr[9]=((tlist[12]%100)/10)+'0';tstr[10]=(tlist[12]%10)+'0';
+ 876   3                                      tstr[12]=(tlist[13]/100)+'0';tstr[13]=((tlist[13]%100)/10)+'0';tstr[14]=(tlist[13]%10)+'0';
+ 877   3                                      str[8 - baris]=tstr;
+ 878   3                              if((baris>=6) && (baris<=7))
+ 879   3                                      strcpy(tstr,"8. L8 =    -   ");
+ 880   3                                      tstr[8]=(tlist[14]/100)+'0';tstr[9]=((tlist[14]%100)/10)+'0';tstr[10]=(tlist[14]%10)+'0';
+ 881   3                                      tstr[12]=(tlist[15]/100)+'0';tstr[13]=((tlist[15]%100)/10)+'0';tstr[14]=(tlist[15]%10)+'0';
+ 882   3                                      str[9 - baris]=tstr;
+ 883   3                              if((baris>=7) && (baris<=7))
+ 884   3                                      str[10 - baris]="[CAN] EXIT     ";
+ 885   3                              
+ 886   3                              Lcd4_Set_Cursor(1,0);Lcd4_Write_String(str[0]);
+ 887   3                              Lcd4_Set_Cursor(2,0);Lcd4_Write_String(str[1]);
+ 888   3                              Lcd4_Set_Cursor(3,0);Lcd4_Write_String(str[2]);
+ 889   3                              Lcd4_Set_Cursor(4,0);Lcd4_Write_String(str[3]);
+ 890   3                      }
+ 891   2              }
+ 892   1              while(key==CAN){key=get_key();}
+ 893   1              baris=0;st1[2]=0;
+ 894   1              Lcd4_Clear();Delay(50);
+ 895   1              Lcd4_Set_Cursor(1,0); Lcd4_Write_String("Pilih Plan");
+ 896   1              Lcd4_Set_Cursor(2,0);Lcd4_Write_String("Plan:");
+ 897   1              Lcd4_Set_Cursor(3,0);Lcd4_Write_String("[COR]EDIT  [CAN]EXIT");
+ 898   1      }
+ 899          
+ 900          void SetProgramHarian(){                // 6. SetProgramHarian                                  
+ 901   1              progharpilihan=1;
+ 902   1              Lcd4_Clear();Delay(50);
+ 903   1              Lcd4_Set_Cursor(1,0);Lcd4_Write_String("Pilih Program Harian");
+ 904   1              Lcd4_Set_Cursor(2,0);Lcd4_Write_String("Prgrm Harian:  ");
+ 905   1              Lcd4_Set_Cursor(3,0);Lcd4_Write_String("1(MGG) - 7(SBT)");
+ 906   1              Lcd4_Set_Cursor(4,0);Lcd4_Write_String("[COR]EDIT  [CAN]EXIT");
+ 907   1              
+ 908   1              while (key != CAN){
+ 909   2                      key = get_key();
+ 910   2                      st1[0]= '0'+ progharpilihan;
+ 911   2                      Lcd4_Set_Cursor(2,14);Lcd4_Write_Char(st1[0]);Delay(50);                
+ 912   2                      Lcd4_Set_Cursor(2,14);
+ 913   2                      if((key>='0') && (key<='9')){
+ 914   3                              progharpilihan = key - '0';
+ 915   3                              temp=key;
+ 916   3                              while(key==temp){key=get_key();}
+ 917   3                      }
+ 918   2                      if(key==COR){
+ 919   3                              while(key==COR){key=get_key();} 
+ 920   3                              SetProgramHarianPilih();
+ 921   3                      }
+ 922   2                      Lcd4_Write_Char('_');Delay(50);
+ 923   2              }
+C51 COMPILER V8.16   AT89C51RC2                                                            10/08/2013 11:10:29 PAGE 16  
+
+ 924   1              while(key==CAN){key=get_key();}
+ 925   1              Lcd4_Clear();Delay(50);  
+ 926   1              Lcd4_Set_Cursor(1,0);Lcd4_Write_String("MAIN MENU [1]-[6]   ");
+ 927   1              Lcd4_Set_Cursor(2,0);Lcd4_Write_String("[CAN]EXIT           ");
+ 928   1              Lcd4_Set_Cursor(3,0);Lcd4_Write_String("[1] Set waktu       ");
+ 929   1              Lcd4_Set_Cursor(4,0);Lcd4_Write_String("[2] Set tanggal     ");
+ 930   1      }
+ 931          
+ 932          void SetProgramHarianPilih(){   // 6.a. SetProgramHarianPilih
+ 933   1              Lcd4_Clear();Delay(50);
+ 934   1              Lcd4_Set_Cursor(1,0);Lcd4_Write_String("Prgrm Harian [ ]");
+ 935   1              st1[0] = progharpilihan + '0';
+ 936   1              Lcd4_Set_Cursor(1,14);Lcd4_Write_Char(st1[0]);
+ 937   1              switch (progharpilihan){                                                                                                                                        // baris 2
+ 938   2                      case 1:  
+ 939   2                              Lcd4_Set_Cursor(1,17);Lcd4_Write_String("MGG");  break;
+ 940   2                      case 2:  
+ 941   2                              Lcd4_Set_Cursor(1,17);Lcd4_Write_String("SNN");  break;
+ 942   2                      case 3:  
+ 943   2                              Lcd4_Set_Cursor(1,17);Lcd4_Write_String("SLS");  break;
+ 944   2                      case 4:  
+ 945   2                              Lcd4_Set_Cursor(1,17);Lcd4_Write_String("RAB");  break;
+ 946   2                      case 5:  
+ 947   2                              Lcd4_Set_Cursor(1,17);Lcd4_Write_String("KMS");  break;
+ 948   2                      case 6:  
+ 949   2                              Lcd4_Set_Cursor(1,17);Lcd4_Write_String("JMT");  break;
+ 950   2                      case 7:  
+ 951   2                              Lcd4_Set_Cursor(1,17);Lcd4_Write_String("SBT");  break;
+ 952   2              }
+ 953   1              
+ 954   1              while (key != CAN){
+ 955   2                      key = get_key();
+ 956   2              }
+ 957   1              while(key==CAN){key=get_key();}
+ 958   1              Lcd4_Clear();Delay(50);
+ 959   1              Lcd4_Set_Cursor(1,0);Lcd4_Write_String("Pilih Program Harian");
+ 960   1              Lcd4_Set_Cursor(2,0);Lcd4_Write_String("Prgrm Harian:  ");
+ 961   1              Lcd4_Set_Cursor(3,0);Lcd4_Write_String("1(MGG) - 7(SBT)");
+ 962   1              Lcd4_Set_Cursor(4,0);Lcd4_Write_String("[COR]EDIT  [CAN]EXIT");
+ 963   1      }
+ 964          
+ 965          void UpdateProgramHarian(){
+ 966   1              /*if(tgl,bln == holiday)
+ 967   1                      proghar = 8;
+ 968   1              else*/
+ 969   1                      proghar = hr;
+ 970   1      }
+ 971          
+ 972          void UpdatePlan(){
+ 973   1      }
+ 974          
+ 975          void UpdateLampu(){
+ 976   1      }
+ 977          
+ 978          char READ_SWITCHES(void){       
+ 979   1              #define DELAY 50        
+ 980   1      
+ 981   1              RowA = 0; RowB = 1; RowC = 1; RowD = 1;         //Test Row A
+ 982   1      
+ 983   1              if (C1 == 0) { Delay(DELAY); while (C1==0); return '7'; }
+ 984   1              if (C2 == 0) { Delay(DELAY); while (C2==0); return '8'; }
+ 985   1              if (C3 == 0) { Delay(DELAY); while (C3==0); return '9'; }
+C51 COMPILER V8.16   AT89C51RC2                                                            10/08/2013 11:10:29 PAGE 17  
+
+ 986   1              if (C4 == 0) { Delay(DELAY); while (C4==0); return '/'; }       //COR
+ 987   1      
+ 988   1              RowA = 1; RowB = 0; RowC = 1; RowD = 1;         //Test Row B
+ 989   1      
+ 990   1              if (C1 == 0) { Delay(DELAY); while (C1==0); return '4'; }
+ 991   1              if (C2 == 0) { Delay(DELAY); while (C2==0); return '5'; }
+ 992   1              if (C3 == 0) { Delay(DELAY); while (C3==0); return '6'; }
+ 993   1              if (C4 == 0) { Delay(DELAY); while (C4==0); return 'x'; }       //MEN
+ 994   1              
+ 995   1              RowA = 1; RowB = 1; RowC = 0; RowD = 1;         //Test Row C
+ 996   1      
+ 997   1              if (C1 == 0) { Delay(DELAY); while (C1==0); return '1'; }
+ 998   1              if (C2 == 0) { Delay(DELAY); while (C2==0); return '2'; }
+ 999   1              if (C3 == 0) { Delay(DELAY); while (C3==0); return '3'; }
+1000   1              if (C4 == 0) { Delay(DELAY); while (C4==0); return '-'; }       //UP
+1001   1              
+1002   1              RowA = 1; RowB = 1; RowC = 1; RowD = 0;         //Test Row D
+1003   1      
+1004   1              if (C1 == 0) { Delay(DELAY); while (C1==0); return 'm'; }       //CAN
+1005   1              if (C2 == 0) { Delay(DELAY); while (C2==0); return '0'; }       
+1006   1              if (C3 == 0) { Delay(DELAY); while (C3==0); return '='; }       //ENT
+1007   1              if (C4 == 0) { Delay(DELAY); while (C4==0); return '+'; }       //DOWN
+1008   1      
+1009   1              return 'n';             // Means no key has been pressed
+1010   1      }
+1011          
+1012          char get_key(void){
+1013   1              key = 'n';              //assume no key pressed
+1014   1      
+1015   1              key = READ_SWITCHES();   //scan the keys again and again
+1016   1      
+1017   1              return key;                  //when key pressed then return its value
+1018   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   8877    ----
+   CONSTANT SIZE    =    849    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     65      45
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,17 @@
+Counter 0 Example Program
+=========================
+
+This example program shows how to configure timer/counter 0 as a
+16-bit counter.  Each time port 3.4 goes low, the 16-bit counter
+is incremented by 1.
+
+To test this program...
+
+1. Start the debugger.
+2. View the Toolbox window.
+3. View the Serial window.
+4. Run the program.
+5. Click the 'Toggle Port 3.4' button in the toolbox.
+
+You will see the value of the counter increase each time you
+click on the 'Toggle' button.

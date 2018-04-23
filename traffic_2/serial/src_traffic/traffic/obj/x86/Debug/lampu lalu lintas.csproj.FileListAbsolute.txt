@@ -1,0 +1,17 @@
+C:\Users\DELL\Documents\HME\WS\program\pak Anis\lampu merah\lampu lalu lintas\lampu lalu lintas\bin\Debug\lampu lalu lintas.exe
+C:\Users\DELL\Documents\HME\WS\program\pak Anis\lampu merah\lampu lalu lintas\lampu lalu lintas\bin\Debug\lampu lalu lintas.pdb
+C:\Users\DELL\Documents\HME\WS\program\pak Anis\lampu merah\lampu lalu lintas\lampu lalu lintas\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\DELL\Documents\HME\WS\program\pak Anis\lampu merah\lampu lalu lintas\lampu lalu lintas\obj\x86\Debug\MainWindow.baml
+C:\Users\DELL\Documents\HME\WS\program\pak Anis\lampu merah\lampu lalu lintas\lampu lalu lintas\obj\x86\Debug\MainWindow.g.cs
+C:\Users\DELL\Documents\HME\WS\program\pak Anis\lampu merah\lampu lalu lintas\lampu lalu lintas\obj\x86\Debug\App.g.cs
+C:\Users\DELL\Documents\HME\WS\program\pak Anis\lampu merah\lampu lalu lintas\lampu lalu lintas\obj\x86\Debug\lampu lalu lintas_MarkupCompile.cache
+C:\Users\DELL\Documents\HME\WS\program\pak Anis\lampu merah\lampu lalu lintas\lampu lalu lintas\obj\x86\Debug\lampu lalu lintas.g.resources
+C:\Users\DELL\Documents\HME\WS\program\pak Anis\lampu merah\lampu lalu lintas\lampu lalu lintas\obj\x86\Debug\lampu_lalu_lintas.Properties.Resources.resources
+C:\Users\DELL\Documents\HME\WS\program\pak Anis\lampu merah\lampu lalu lintas\lampu lalu lintas\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\DELL\Documents\HME\WS\program\pak Anis\lampu merah\lampu lalu lintas\lampu lalu lintas\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\DELL\Documents\HME\WS\program\pak Anis\lampu merah\lampu lalu lintas\lampu lalu lintas\obj\x86\Debug\lampu lalu lintas.exe
+C:\Users\DELL\Documents\HME\WS\program\pak Anis\lampu merah\lampu lalu lintas\lampu lalu lintas\obj\x86\Debug\lampu lalu lintas.pdb
+C:\Users\DELL\Documents\HME\WS\program\pak Anis\lampu merah\lampu lalu lintas\lampu lalu lintas\obj\x86\Debug\settingwindow.baml
+C:\Users\DELL\Documents\HME\WS\program\pak Anis\lampu merah\lampu lalu lintas\lampu lalu lintas\obj\x86\Debug\settingwindow.g.cs
+C:\Users\DELL\Documents\HME\WS\program\pak Anis\lampu merah\lampu lalu lintas\lampu lalu lintas\obj\x86\Debug\comportwindow.baml
+C:\Users\DELL\Documents\HME\WS\program\pak Anis\lampu merah\lampu lalu lintas\lampu lalu lintas\obj\x86\Debug\comportwindow.g.cs

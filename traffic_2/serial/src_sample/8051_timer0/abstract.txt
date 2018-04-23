@@ -1,0 +1,18 @@
+Timer 0 Example Program
+=======================
+
+This example program shows how to configure timer/counter 0 as a
+16-bit timer.  An interrupt service routine (ISR) is invoked each
+time the timer overflows (goes from 0xFFFF to 0x0000).  Inside
+the ISR, a variable called overflow_count is incremented by one.
+
+To test this program...
+
+1. Start the debugger.
+2. Set a breakpoint on the 'overflow_count++' line in the ISR.
+3. Run the program.
+
+Each time the interrupt routine is invoked, the debugger will stop
+running the program.  Position the cursor over 'overflow_count' to
+see its current value.
+

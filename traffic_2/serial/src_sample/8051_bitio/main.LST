@@ -1,0 +1,86 @@
+C51 COMPILER V7.00  MAIN                                                                   07/02/2002 14:54:01 PAGE 1   
+
+
+C51 COMPILER V7.00, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c WARNINGLEVEL(0) DEBUG OBJECTEXTEND CODE LISTINCLUDE SYMBOLS TABS(8)
+
+stmt level    source
+
+   1          /*-----------------------------------------------------------------------------
+   2          Definitions for P1 (8 bits), P1.0, and P1.1.
+   3          -----------------------------------------------------------------------------*/
+   4          sfr P1 = 0x90;        /* SFR for P1 */
+   5          
+   6          sbit P1_0 = P1^0;     /* SFR for P1.0 */
+   7          sbit P1_1 = P1^1;     /* SFR for P1.1 */
+   8          
+   9          /*-----------------------------------------------------------------------------
+  10          MAIN C function
+  11          -----------------------------------------------------------------------------*/
+  12          void main (void)
+  13          {
+  14   1      P1_0 = 1;                  /* Configure P1.0 as an input */
+  15   1      
+  16   1      /*-----------------------------------------------
+  17   1      This loop reads P1.0 and writes the value read
+  18   1      to P1.1.
+  19   1      
+  20   1      Open the Port 1 Dialog from the Peripherals Menu
+  21   1      and change the value of the P1.0 Pin.  When you
+  22   1      set P1.0 LO, P1.1 outputs LO.  When you set 
+  23   1      P1.1 HI, P1.1 outputs HI.
+  24   1      -----------------------------------------------*/
+  25   1      while (1)
+  26   1        {
+  27   2        P1_1 = P1_0;            /* Copy P1.0 to P1.1 */
+  28   2        }
+  29   1      }
+  30          
+  31          /*-----------------------------------------------------------------------------
+  32          -----------------------------------------------------------------------------*/
+  33          
+C51 COMPILER V7.00  MAIN                                                                   07/02/2002 14:54:01 PAGE 2   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION main (BEGIN)
+                                           ; SOURCE LINE # 12
+                                           ; SOURCE LINE # 13
+                                           ; SOURCE LINE # 14
+0000 D290              SETB    P1_0
+0002         ?C0001:
+                                           ; SOURCE LINE # 25
+                                           ; SOURCE LINE # 26
+                                           ; SOURCE LINE # 27
+0002 A290              MOV     C,P1_0
+0004 9291              MOV     P1_1,C
+                                           ; SOURCE LINE # 28
+0006 80FA              SJMP    ?C0001
+             ; FUNCTION main (END)
+
+C51 COMPILER V7.00  MAIN                                                                   07/02/2002 14:54:01 PAGE 3   
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+P1 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0090H  1
+P1_0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0090H  1
+P1_1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0091H  1
+main . . . . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =      8    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

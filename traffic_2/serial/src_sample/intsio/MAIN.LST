@@ -1,0 +1,230 @@
+C51 COMPILER V6.22f  MAIN                                                                  02/14/2002 12:21:24 PAGE 1   
+
+
+C51 COMPILER V6.22f, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN MAIN.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE MAIN.C OPTIMIZE(6,SPEED) BROWSE DEFINE(XTAL=12000000) DEBUG OBJECTEXTEND CO
+                    -DE SYMBOLS
+
+stmt level    source
+
+   1          /*------------------------------------------------------------------------------
+   2          MAIN.C:  Interrupt Driver SIO Using printf.
+   3          
+   4          Copyright 1995-2002 KEIL Software, Inc.
+   5          ------------------------------------------------------------------------------*/
+   6          
+   7          #include <stdio.h>
+   8          #include "sio.h"
+   9          
+  10          /*------------------------------------------------------------------------------
+  11          _getkey waits until a character is received from the serial port.  This may not
+  12          be the exact desired operation (for example if the buffer is empty, this
+  13          function hangs waiting for a character to be received).
+  14          ------------------------------------------------------------------------------*/
+  15          char _getkey (void)
+  16          {
+  17   1      int k;
+  18   1      
+  19   1      do
+  20   1        {
+  21   2        k = com_getchar ();
+  22   2        }
+  23   1      while (k == -1);
+  24   1      
+  25   1      return ((unsigned char) k);
+  26   1      }
+  27          
+  28          /*------------------------------------------------------------------------------
+  29          ------------------------------------------------------------------------------*/
+  30          char putchar (char c)
+  31          {
+  32   1      volatile unsigned int i;
+  33   1      
+  34   1      while (com_putchar (c) != 0)
+  35   1        {
+  36   2        for (i=0; i<1000; i++)
+  37   2          {
+  38   3          /*** DO NOTHING ***/
+  39   3          }
+  40   2        }
+  41   1      
+  42   1      return (c);
+  43   1      }
+  44          
+  45          /*------------------------------------------------------------------------------
+  46          Note that the two function above, _getkey and putchar, replace the library
+  47          functions of the same name.  These functions use the interrupt-driven serial
+  48          I/O routines in SIO.C.
+  49          ------------------------------------------------------------------------------*/
+  50          code char message [] =
+  51            "This is a test to see if the interrupt driven serial I/O routines really work.";
+  52          
+  53          void main (void)
+  54          {
+C51 COMPILER V6.22f  MAIN                                                                  02/14/2002 12:21:24 PAGE 2   
+
+  55   1      com_initialize ();              /* initialize interrupt driven serial I/O */
+  56   1      com_baudrate (38400);           /* setup for 38400 baud */
+  57   1      
+  58   1      printf ("Interrupt-driver Serial I/O Example\r\n\r\n");
+  59   1      
+  60   1      while (1)
+  61   1        {
+  62   2        unsigned char c;
+  63   2      
+  64   2        printf ("Press a key.\r\n");
+  65   2        c = getchar ();
+  66   2        printf ("\r\n");
+  67   2        printf ("You pressed '%c'.\r\n\r\n", c);
+  68   2        }
+  69   1      }
+  70          
+  71          /*------------------------------------------------------------------------------
+  72          ------------------------------------------------------------------------------*/
+  73          
+C51 COMPILER V6.22f  MAIN                                                                  02/14/2002 12:21:24 PAGE 3   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION _getkey (BEGIN)
+                                           ; SOURCE LINE # 15
+                                           ; SOURCE LINE # 16
+0000         ?C0003:
+                                           ; SOURCE LINE # 20
+                                           ; SOURCE LINE # 21
+0000 120000      E     LCALL   com_getchar
+;---- Variable 'k' assigned to Register 'R6/R7' ----
+                                           ; SOURCE LINE # 22
+                                           ; SOURCE LINE # 23
+0003 EF                MOV     A,R7
+0004 F4                CPL     A
+0005 7002              JNZ     ?C0014
+0007 EE                MOV     A,R6
+0008 F4                CPL     A
+0009         ?C0014:
+0009 60F5              JZ      ?C0003
+                                           ; SOURCE LINE # 25
+                                           ; SOURCE LINE # 26
+000B         ?C0004:
+000B 22                RET     
+             ; FUNCTION _getkey (END)
+
+             ; FUNCTION _putchar (BEGIN)
+                                           ; SOURCE LINE # 30
+0000 8F00        R     MOV     c,R7
+                                           ; SOURCE LINE # 31
+0002         ?C0005:
+                                           ; SOURCE LINE # 34
+0002 AF00        R     MOV     R7,c
+0004 120000      E     LCALL   _com_putchar
+0007 EF                MOV     A,R7
+0008 601A              JZ      ?C0006
+                                           ; SOURCE LINE # 35
+                                           ; SOURCE LINE # 36
+000A E4                CLR     A
+000B F500        R     MOV     i,A
+000D F500        R     MOV     i+01H,A
+000F         ?C0007:
+000F C3                CLR     C
+0010 E500        R     MOV     A,i+01H
+0012 94E8              SUBB    A,#0E8H
+0014 E500        R     MOV     A,i
+0016 9403              SUBB    A,#03H
+0018 50E8              JNC     ?C0005
+                                           ; SOURCE LINE # 37
+                                           ; SOURCE LINE # 39
+001A 0500        R     INC     i+01H
+001C E500        R     MOV     A,i+01H
+001E 7002              JNZ     ?C0015
+0020 0500        R     INC     i
+0022         ?C0015:
+0022 80EB              SJMP    ?C0007
+                                           ; SOURCE LINE # 40
+0024         ?C0006:
+                                           ; SOURCE LINE # 42
+0024 AF00        R     MOV     R7,c
+                                           ; SOURCE LINE # 43
+0026         ?C0010:
+C51 COMPILER V6.22f  MAIN                                                                  02/14/2002 12:21:24 PAGE 4   
+
+0026 22                RET     
+             ; FUNCTION _putchar (END)
+
+             ; FUNCTION main (BEGIN)
+                                           ; SOURCE LINE # 53
+                                           ; SOURCE LINE # 54
+                                           ; SOURCE LINE # 55
+0000 120000      E     LCALL   com_initialize
+                                           ; SOURCE LINE # 56
+0003 7F00              MOV     R7,#00H
+0005 7E96              MOV     R6,#096H
+0007 120000      E     LCALL   _com_baudrate
+                                           ; SOURCE LINE # 58
+000A 7BFF              MOV     R3,#0FFH
+000C 7A00        R     MOV     R2,#HIGH ?SC_0
+000E 7900        R     MOV     R1,#LOW ?SC_0
+0010 120000      E     LCALL   _printf
+0013         ?C0011:
+                                           ; SOURCE LINE # 60
+                                           ; SOURCE LINE # 61
+                                           ; SOURCE LINE # 64
+0013 7BFF              MOV     R3,#0FFH
+0015 7A00        R     MOV     R2,#HIGH ?SC_40
+0017 7900        R     MOV     R1,#LOW ?SC_40
+0019 120000      E     LCALL   _printf
+                                           ; SOURCE LINE # 65
+001C 120000      E     LCALL   getchar
+001F 8F00        R     MOV     c,R7
+                                           ; SOURCE LINE # 66
+0021 7BFF              MOV     R3,#0FFH
+0023 7A00        R     MOV     R2,#HIGH ?SC_55
+0025 7900        R     MOV     R1,#LOW ?SC_55
+0027 120000      E     LCALL   _printf
+                                           ; SOURCE LINE # 67
+002A 7BFF              MOV     R3,#0FFH
+002C 7A00        R     MOV     R2,#HIGH ?SC_58
+002E 7900        R     MOV     R1,#LOW ?SC_58
+0030 850000      E     MOV     ?_printf?BYTE+03H,c
+0033 120000      E     LCALL   _printf
+                                           ; SOURCE LINE # 68
+0036 80DB              SJMP    ?C0011
+0038 22                RET     
+             ; FUNCTION main (END)
+
+C51 COMPILER V6.22f  MAIN                                                                  02/14/2002 12:21:24 PAGE 5   
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+com_getchar. . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+size_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+main . . . . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  c. . . . . . . . . . . . . . . . . .  AUTO     DATA   U_CHAR   0000H  1
+_com_baudrate. . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+com_initialize . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+_putchar . . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  c. . . . . . . . . . . . . . . . . .  AUTO     DATA   CHAR     0000H  1
+  i. . . . . . . . . . . . . . . . . .  AUTO     DATA   U_INT    0001H  2
+getchar. . . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+message. . . . . . . . . . . . . . . .  PUBLIC   CODE   ARRAY    0050H  79
+_getkey. . . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  k. . . . . . . . . . . . . . . . . .  * REG *  DATA   INT      0006H  2
+_printf. . . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+_com_putchar . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    108    ----
+   CONSTANT SIZE    =    159    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,448 @@
+BL51 BANKED LINKER/LOCATER V4.21                                                        02/14/2002  12:21:24  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V4.21, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE SIO.obj, MAIN.obj TO intsio IXREF RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  SIO.obj (SIO)
+  MAIN.obj (MAIN)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_STARTUP)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?LMUL)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?SLDIV)
+  C:\KEIL\C51\LIB\C51S.LIB (PRINTF)
+  C:\KEIL\C51\LIB\C51S.LIB (GETCHAR)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_INIT)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CLDPTR)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CLDOPTR)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CSTPTR)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?ULDIV)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?PLDIIDATA)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CCASE)
+
+
+LINK MAP OF MODULE:  intsio (SIO)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0001H     UNIT         ?DT?GETCHAR
+                    0009H     0007H                  *** GAP ***
+            REG     0010H     0008H     ABSOLUTE     "REG BANK 2"
+                    0018H     0008H                  *** GAP ***
+            BIT     0020H.0   0001H.1   UNIT         _BIT_GROUP_
+            BIT     0021H.1   0000H.1   UNIT         ?BI?GETCHAR
+                    0021H.2   0000H.6                *** GAP ***
+            DATA    0022H     0019H     UNIT         _DATA_GROUP_
+            IDATA   003BH     0001H     UNIT         ?STACK
+
+            * * * * * * *  X D A T A   M E M O R Y  * * * * * * *
+            XDATA   0000H     0205H     UNIT         ?XD?SIO
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0015H     UNIT         ?C_INITSEG
+                    0018H     000BH                  *** GAP ***
+            CODE    0023H     0003H     ABSOLUTE     
+            CODE    0026H     035CH     UNIT         ?PR?PRINTF?PRINTF
+            CODE    0382H     01ABH     UNIT         ?C?LIB_CODE
+            CODE    052DH     009FH     UNIT         ?CO?MAIN
+            CODE    05CCH     008CH     UNIT         ?C_C51STARTUP
+            CODE    0658H     0069H     UNIT         ?PR?COM_ISR?SIO
+            CODE    06C1H     0045H     UNIT         ?PR?_COM_BAUDRATE?SIO
+            CODE    0706H     0044H     UNIT         ?C?LDIV
+            CODE    074AH     003FH     UNIT         ?PR?_COM_PUTCHAR?SIO
+BL51 BANKED LINKER/LOCATER V4.21                                                      02/14/2002  12:21:24  PAGE 2
+
+
+            CODE    0789H     0039H     UNIT         ?PR?MAIN?MAIN
+            CODE    07C2H     002DH     UNIT         ?PR?COM_INITIALIZE?SIO
+            CODE    07EFH     0027H     UNIT         ?PR?_PUTCHAR?MAIN
+            CODE    0816H     0025H     UNIT         ?PR?COM_GETCHAR?SIO
+            CODE    083BH     0011H     UNIT         ?PR?GETCHAR?GETCHAR
+            CODE    084CH     000DH     UNIT         ?PR?COM_RBUFLEN?SIO
+            CODE    0859H     000DH     UNIT         ?PR?COM_TBUFLEN?SIO
+            CODE    0866H     000CH     UNIT         ?PR?_GETKEY?MAIN
+
+
+
+OVERLAY MAP OF MODULE:   intsio (SIO)
+
+
+SEGMENT                           BIT_GROUP          DATA_GROUP 
+  +--> CALLED SEGMENT          START    LENGTH     START    LENGTH
+------------------------------------------------------------------
+?C_C51STARTUP                  -----    -----      -----    -----
+  +--> ?PR?MAIN?MAIN
+  +--> ?C_INITSEG
+
+?PR?MAIN?MAIN                  -----    -----      0022H    0001H
+  +--> ?PR?COM_INITIALIZE?SIO
+  +--> ?PR?_COM_BAUDRATE?SIO
+  +--> ?CO?MAIN
+  +--> ?PR?PRINTF?PRINTF
+  +--> ?PR?GETCHAR?GETCHAR
+
+?PR?COM_INITIALIZE?SIO         -----    -----      -----    -----
+  +--> ?PR?_COM_BAUDRATE?SIO
+
+?PR?PRINTF?PRINTF              0020H.0  0001H.1    0023H    0014H
+  +--> ?PR?_PUTCHAR?MAIN
+
+?PR?_PUTCHAR?MAIN              -----    -----      0037H    0003H
+  +--> ?PR?_COM_PUTCHAR?SIO
+
+?PR?_COM_PUTCHAR?SIO           -----    -----      003AH    0001H
+  +--> ?PR?COM_TBUFLEN?SIO
+
+?PR?GETCHAR?GETCHAR            -----    -----      -----    -----
+  +--> ?PR?_GETKEY?MAIN
+  +--> ?PR?_PUTCHAR?MAIN
+
+?PR?_GETKEY?MAIN               -----    -----      -----    -----
+  +--> ?PR?COM_GETCHAR?SIO
+
+?PR?COM_GETCHAR?SIO            -----    -----      -----    -----
+  +--> ?PR?COM_RBUFLEN?SIO
+
+
+
+SYMBOL TABLE OF MODULE:  intsio (SIO)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+BL51 BANKED LINKER/LOCATER V4.21                                                      02/14/2002  12:21:24  PAGE 3
+
+
+  -------         MODULE        SIO
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  C:0816H         PUBLIC        com_getchar
+  B:00B0H.4       PUBLIC        T0
+  B:00D0H.6       PUBLIC        AC
+  B:00B0H.5       PUBLIC        T1
+  B:00A8H.7       PUBLIC        EA
+  X:0000H         SYMBOL        t_disabled
+  C:084CH         PUBLIC        com_rbuflen
+  C:0859H         PUBLIC        com_tbuflen
+  B:00B0H.7       PUBLIC        RD
+  B:00A8H.4       PUBLIC        ES
+  B:0098H.0       PUBLIC        RI
+  B:00B0H.2       PUBLIC        INT0
+  B:00D0H.7       PUBLIC        CY
+  B:0098H.1       PUBLIC        TI
+  B:00B0H.3       PUBLIC        INT1
+  B:00B8H.4       PUBLIC        PS
+  B:00D0H.2       PUBLIC        OV
+  B:00B0H.6       PUBLIC        WR
+  X:0001H         SYMBOL        r_in
+  X:0002H         SYMBOL        r_out
+  X:0003H         SYMBOL        t_in
+  X:0004H         SYMBOL        t_out
+  X:0005H         SYMBOL        rbuf
+  D:0099H         PUBLIC        SBUF
+  D:0087H         PUBLIC        PCON
+  X:0105H         SYMBOL        tbuf
+  D:0089H         PUBLIC        TMOD
+  B:0088H.1       PUBLIC        IE0
+  B:0088H.3       PUBLIC        IE1
+  B:00A8H.1       PUBLIC        ET0
+  B:00A8H.3       PUBLIC        ET1
+  B:0088H.5       PUBLIC        TF0
+  B:0088H.7       PUBLIC        TF1
+  B:0098H.2       PUBLIC        RB8
+  B:00A8H.0       PUBLIC        EX0
+  B:0088H.0       PUBLIC        IT0
+  D:008DH         PUBLIC        TH1
+  C:06C1H         PUBLIC        _com_baudrate
+  B:0098H.3       PUBLIC        TB8
+  B:00A8H.2       PUBLIC        EX1
+  B:0088H.2       PUBLIC        IT1
+  B:00D0H.0       PUBLIC        P
+  B:0098H.7       PUBLIC        SM0
+  B:0098H.6       PUBLIC        SM1
+  B:0098H.5       PUBLIC        SM2
+  B:00B8H.1       PUBLIC        PT0
+  B:00B8H.3       PUBLIC        PT1
+  B:00D0H.3       PUBLIC        RS0
+  B:0088H.4       PUBLIC        TR0
+  B:00D0H.4       PUBLIC        RS1
+  B:0088H.6       PUBLIC        TR1
+  B:00B8H.0       PUBLIC        PX0
+  B:00B8H.2       PUBLIC        PX1
+  C:07C2H         PUBLIC        com_initialize
+  B:0098H.4       PUBLIC        REN
+BL51 BANKED LINKER/LOCATER V4.21                                                      02/14/2002  12:21:24  PAGE 4
+
+
+  B:00B0H.0       PUBLIC        RXD
+  C:0658H         SYMBOL        com_isr
+  B:00B0H.1       PUBLIC        TXD
+  B:00D0H.5       PUBLIC        F0
+  C:074AH         PUBLIC        _com_putchar
+  -------         PROC          COM_ISR
+  C:0658H         LINE#         28
+  C:0663H         LINE#         33
+  C:0666H         LINE#         34
+  C:0666H         LINE#         35
+  C:0668H         LINE#         37
+  C:067AH         LINE#         38
+  C:068EH         LINE#         39
+  C:068EH         LINE#         44
+  C:0691H         LINE#         45
+  C:0691H         LINE#         46
+  C:0693H         LINE#         48
+  C:069FH         LINE#         49
+  C:06B2H         LINE#         51
+  C:06B8H         LINE#         52
+  C:06B8H         LINE#         54
+  -------         ENDPROC       COM_ISR
+  -------         PROC          COM_INITIALIZE
+  C:07C2H         LINE#         58
+  C:07C2H         LINE#         59
+  C:07C2H         LINE#         63
+  C:07C9H         LINE#         68
+  C:07CBH         LINE#         70
+  C:07D0H         LINE#         71
+  C:07D2H         LINE#         72
+  C:07D7H         LINE#         74
+  C:07DAH         LINE#         75
+  C:07DCH         LINE#         80
+  C:07E0H         LINE#         81
+  C:07E2H         LINE#         82
+  C:07E4H         LINE#         84
+  C:07E6H         LINE#         85
+  C:07E8H         LINE#         87
+  C:07EAH         LINE#         88
+  C:07ECH         LINE#         90
+  C:07EEH         LINE#         91
+  -------         ENDPROC       COM_INITIALIZE
+  -------         PROC          _COM_BAUDRATE
+  D:0006H         SYMBOL        baudrate
+  C:06C1H         LINE#         95
+  C:06C1H         LINE#         97
+  C:06C1H         LINE#         98
+  C:06C3H         LINE#         103
+  C:06C5H         LINE#         104
+  C:06CAH         LINE#         105
+  C:06CCH         LINE#         106
+  C:06D1H         LINE#         111
+  C:06D3H         LINE#         112
+  C:06D5H         LINE#         114
+  C:06D8H         LINE#         116
+  C:06DBH         LINE#         117
+  C:06DEH         LINE#         119
+BL51 BANKED LINKER/LOCATER V4.21                                                      02/14/2002  12:21:24  PAGE 5
+
+
+  C:0701H         LINE#         121
+  C:0703H         LINE#         123
+  C:0705H         LINE#         124
+  -------         ENDPROC       _COM_BAUDRATE
+  -------         PROC          _COM_PUTCHAR
+  D:003AH         SYMBOL        c
+  C:074AH         LINE#         128
+  C:074CH         LINE#         130
+  C:074CH         LINE#         134
+  C:0761H         LINE#         135
+  C:0764H         LINE#         141
+  C:0766H         LINE#         143
+  C:077AH         LINE#         145
+  C:0780H         LINE#         146
+  C:0780H         LINE#         147
+  C:0782H         LINE#         148
+  C:0784H         LINE#         149
+  C:0784H         LINE#         151
+  C:0786H         LINE#         153
+  C:0788H         LINE#         154
+  -------         ENDPROC       _COM_PUTCHAR
+  -------         PROC          COM_GETCHAR
+  -------         DO            
+  D:0006H         SYMBOL        c
+  -------         ENDDO         
+  C:0816H         LINE#         158
+  C:0816H         LINE#         159
+  C:0816H         LINE#         162
+  C:081CH         LINE#         163
+  C:0821H         LINE#         165
+  C:0823H         LINE#         166
+  C:0838H         LINE#         167
+  C:083AH         LINE#         169
+  C:083AH         LINE#         170
+  -------         ENDPROC       COM_GETCHAR
+  -------         PROC          COM_RBUFLEN
+  C:084CH         LINE#         174
+  C:084CH         LINE#         175
+  C:084CH         LINE#         176
+  C:0858H         LINE#         177
+  -------         ENDPROC       COM_RBUFLEN
+  -------         PROC          COM_TBUFLEN
+  C:0859H         LINE#         181
+  C:0859H         LINE#         182
+  C:0859H         LINE#         183
+  C:0865H         LINE#         184
+  -------         ENDPROC       COM_TBUFLEN
+  -------         ENDMOD        SIO
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  C:0789H         PUBLIC        main
+  C:07EFH         PUBLIC        _putchar
+  C:057DH         PUBLIC        message
+  C:0866H         PUBLIC        _getkey
+  -------         PROC          _GETKEY
+  -------         DO            
+BL51 BANKED LINKER/LOCATER V4.21                                                      02/14/2002  12:21:24  PAGE 6
+
+
+  D:0006H         SYMBOL        k
+  -------         ENDDO         
+  C:0866H         LINE#         15
+  C:0866H         LINE#         16
+  C:0866H         LINE#         20
+  C:0866H         LINE#         21
+  C:0869H         LINE#         22
+  C:0869H         LINE#         23
+  C:0871H         LINE#         25
+  C:0871H         LINE#         26
+  -------         ENDPROC       _GETKEY
+  -------         PROC          _PUTCHAR
+  D:0037H         SYMBOL        c
+  -------         DO            
+  D:0038H         SYMBOL        i
+  -------         ENDDO         
+  C:07EFH         LINE#         30
+  C:07F1H         LINE#         31
+  C:07F1H         LINE#         34
+  C:07F9H         LINE#         35
+  C:07F9H         LINE#         36
+  C:0809H         LINE#         37
+  C:0809H         LINE#         39
+  C:0813H         LINE#         40
+  C:0813H         LINE#         42
+  C:0815H         LINE#         43
+  -------         ENDPROC       _PUTCHAR
+  -------         PROC          MAIN
+  -------         DO            
+  D:0022H         SYMBOL        c
+  -------         ENDDO         
+  C:0789H         LINE#         53
+  C:0789H         LINE#         54
+  C:0789H         LINE#         55
+  C:078CH         LINE#         56
+  C:0793H         LINE#         58
+  C:079CH         LINE#         60
+  C:079CH         LINE#         61
+  C:079CH         LINE#         64
+  C:07A5H         LINE#         65
+  C:07AAH         LINE#         66
+  C:07B3H         LINE#         67
+  C:07BFH         LINE#         68
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        MAIN
+
+  -------         MODULE        ?C?LMUL
+  C:0382H         PUBLIC        ?C?LMUL
+  -------         ENDMOD        ?C?LMUL
+
+  -------         MODULE        ?C?SLDIV
+  C:0706H         PUBLIC        ?C?SLDIV
+  -------         ENDMOD        ?C?SLDIV
+
+  -------         MODULE        PRINTF
+  D:0023H         PUBLIC        ?_PRINTF517?BYTE
+  D:0023H         PUBLIC        ?_PRINTF?BYTE
+BL51 BANKED LINKER/LOCATER V4.21                                                      02/14/2002  12:21:24  PAGE 7
+
+
+  D:0023H         PUBLIC        ?_SPRINTF517?BYTE
+  D:0023H         PUBLIC        ?_SPRINTF?BYTE
+  C:0088H         PUBLIC        _PRINTF
+  C:0088H         PUBLIC        _PRINTF517
+  C:0082H         PUBLIC        _SPRINTF
+  C:0082H         PUBLIC        _SPRINTF517
+  -------         ENDMOD        PRINTF
+
+  -------         MODULE        GETCHAR
+  B:0021H.1       PUBLIC        ?C?CHARLOADED
+  D:0008H         PUBLIC        ?_UNGETCHAR?BYTE
+  C:083BH         PUBLIC        GETCHAR
+  -------         ENDMOD        GETCHAR
+
+  -------         MODULE        ?C?CLDPTR
+  C:03D1H         PUBLIC        ?C?CLDPTR
+  -------         ENDMOD        ?C?CLDPTR
+
+  -------         MODULE        ?C?CLDOPTR
+  C:03EAH         PUBLIC        ?C?CLDOPTR
+  -------         ENDMOD        ?C?CLDOPTR
+
+  -------         MODULE        ?C?CSTPTR
+  C:0417H         PUBLIC        ?C?CSTPTR
+  -------         ENDMOD        ?C?CSTPTR
+
+  -------         MODULE        ?C?ULDIV
+  C:0465H         PUBLIC        ?C?ULDIV
+  -------         ENDMOD        ?C?ULDIV
+
+  -------         MODULE        ?C?PLDIIDATA
+  C:04F7H         PUBLIC        ?C?PLDIIDATA
+  -------         ENDMOD        ?C?PLDIIDATA
+
+  -------         MODULE        ?C?CCASE
+  C:0507H         PUBLIC        ?C?CCASE
+  -------         ENDMOD        ?C?CCASE
+
+
+
+INTER-MODULE CROSS-REFERENCE LISTING
+------------------------------------
+
+
+NAME . . . . . . . USAGE    MODULE NAMES
+----------------------------------------
+
+?C?CCASE . . . . . CODE;    ?C?CCASE  PRINTF  
+?C?CHARLOADED. . . BIT;     GETCHAR  
+?C?CLDOPTR . . . . CODE;    ?C?CLDOPTR  PRINTF  
+?C?CLDPTR. . . . . CODE;    ?C?CLDPTR  PRINTF  
+?C?CSTPTR. . . . . CODE;    ?C?CSTPTR  PRINTF  
+?C?LMUL. . . . . . CODE;    ?C?LMUL  SIO  
+?C?PLDIIDATA . . . CODE;    ?C?PLDIIDATA  PRINTF  
+?C?SLDIV . . . . . CODE;    ?C?SLDIV  SIO  
+?C?ULDIV . . . . . CODE;    ?C?ULDIV  ?C?SLDIV  
+?C_INITSEGSTART. . CODE;    ** L51 GENERATED **  
+BL51 BANKED LINKER/LOCATER V4.21                                                      02/14/2002  12:21:24  PAGE 8
+
+
+?C_START . . . . . CODE;    ?C_INIT  ?C_STARTUP  
+?C_STARTUP . . . . CODE;    ?C_STARTUP  MAIN  
+?_PRINTF517?BYTE . DATA;    PRINTF  
+?_PRINTF?BYTE. . . DATA;    PRINTF  MAIN  
+?_SPRINTF517?BYTE. DATA;    PRINTF  
+?_SPRINTF?BYTE . . DATA;    PRINTF  
+?_UNGETCHAR?BYTE . DATA;    GETCHAR  
+COM_GETCHAR. . . . CODE;    SIO  MAIN  
+COM_INITIALIZE . . CODE;    SIO  MAIN  
+COM_RBUFLEN. . . . CODE;    SIO  
+COM_TBUFLEN. . . . CODE;    SIO  
+GETCHAR. . . . . . CODE;    GETCHAR  MAIN  
+MAIN . . . . . . . CODE;    MAIN  ?C_INIT  
+MESSAGE. . . . . . CODE;    MAIN  
+_COM_BAUDRATE. . . CODE;    SIO  MAIN  
+_COM_PUTCHAR . . . CODE;    SIO  MAIN  
+_GETKEY. . . . . . CODE;    MAIN  GETCHAR  
+_PRINTF. . . . . . CODE;    PRINTF  MAIN  
+_PRINTF517 . . . . CODE;    PRINTF  
+_PUTCHAR . . . . . CODE;    MAIN  GETCHAR  PRINTF  
+_SPRINTF . . . . . CODE;    PRINTF  
+_SPRINTF517. . . . CODE;    PRINTF  
+
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

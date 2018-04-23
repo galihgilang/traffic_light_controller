@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"at89c51rc2.obj" 
+TO "at89c51rc2" 
+RAMSIZE(256) 

@@ -1,0 +1,197 @@
+C51 COMPILER V6.03b  MAIN                                                                  11/26/2000 19:19:49 PAGE 1   
+
+
+C51 COMPILER V6.03b, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\main.c BROWSE DEBUG OBJECTEXTEND CODE SYMBOLS
+
+stmt level    source
+
+   1          #include <reg52.h>
+   2          #include <stdio.h>
+   3          
+   4          /*------------------------------------------------
+   5          MAIN C function
+   6          ------------------------------------------------*/
+   7          void main (void)
+   8          {
+   9   1      /*--------------------------------------
+  10   1      Set serial port for 9600 baud at
+  11   1      11.0592 MHz.  Note that we use Timer 1
+  12   1      for the baud rate generator.
+  13   1      --------------------------------------*/
+  14   1      SCON  = 0x50;
+  15   1      TMOD |= 0x20;
+  16   1      TH1   = 0xFA;
+  17   1      TR1   = 1;
+  18   1      TI    = 1;
+  19   1      PCON |= 0x80;
+  20   1      
+  21   1      printf ("\r\nCounter 0 Example Program\r\n");
+  22   1      printf ("\r\nStart toggling P3.4 (T0 input)\r\n\r\n");
+  23   1      
+  24   1      /*--------------------------------------
+  25   1      Set Timer0 for 16-bit counter mode.
+  26   1      Set the Timer0 Run control bit.
+  27   1      --------------------------------------*/
+  28   1      TMOD = (TMOD & 0xF0) | 0x05;
+  29   1      TR0 = 1;
+  30   1      
+  31   1      /*--------------------------------------
+  32   1      Output the value of the counter.  As you
+  33   1      toggle P3.4, the timer/counter 0 value
+  34   1      will increase.
+  35   1      --------------------------------------*/
+  36   1      while (1)
+  37   1        {
+  38   2        printf ("\rCounter 0 = %2.2bX%2.2bXh", TH0, TL0);
+  39   2        }
+  40   1      }
+  41          
+C51 COMPILER V6.03b  MAIN                                                                  11/26/2000 19:19:49 PAGE 2   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION main (BEGIN)
+                                           ; SOURCE LINE # 7
+                                           ; SOURCE LINE # 8
+                                           ; SOURCE LINE # 14
+0000 759850            MOV     SCON,#050H
+                                           ; SOURCE LINE # 15
+0003 438920            ORL     TMOD,#020H
+                                           ; SOURCE LINE # 16
+0006 758DFA            MOV     TH1,#0FAH
+                                           ; SOURCE LINE # 17
+0009 D28E              SETB    TR1
+                                           ; SOURCE LINE # 18
+000B D299              SETB    TI
+                                           ; SOURCE LINE # 19
+000D 438780            ORL     PCON,#080H
+                                           ; SOURCE LINE # 21
+0010 7BFF              MOV     R3,#0FFH
+0012 7A00        R     MOV     R2,#HIGH ?SC_0
+0014 7900        R     MOV     R1,#LOW ?SC_0
+0016 120000      E     LCALL   _printf
+                                           ; SOURCE LINE # 22
+0019 7BFF              MOV     R3,#0FFH
+001B 7A00        R     MOV     R2,#HIGH ?SC_30
+001D 7900        R     MOV     R1,#LOW ?SC_30
+001F 120000      E     LCALL   _printf
+                                           ; SOURCE LINE # 28
+0022 E589              MOV     A,TMOD
+0024 54F0              ANL     A,#0F0H
+0026 4405              ORL     A,#05H
+0028 F589              MOV     TMOD,A
+                                           ; SOURCE LINE # 29
+002A D28C              SETB    TR0
+002C         ?C0001:
+                                           ; SOURCE LINE # 36
+                                           ; SOURCE LINE # 37
+                                           ; SOURCE LINE # 38
+002C 7BFF              MOV     R3,#0FFH
+002E 7A00        R     MOV     R2,#HIGH ?SC_67
+0030 7900        R     MOV     R1,#LOW ?SC_67
+0032 858C00      E     MOV     ?_printf?BYTE+03H,TH0
+0035 858A00      E     MOV     ?_printf?BYTE+04H,TL0
+0038 120000      E     LCALL   _printf
+                                           ; SOURCE LINE # 39
+003B 80EF              SJMP    ?C0001
+             ; FUNCTION main (END)
+
+C51 COMPILER V6.03b  MAIN                                                                  11/26/2000 19:19:49 PAGE 3   
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+P1 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0090H  1
+P3 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B0H  1
+T0 . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B4H  1
+AC . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D6H  1
+T1 . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B5H  1
+T2 . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0090H  1
+EA . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00AFH  1
+IE . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A8H  1
+size_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+EXF2 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CEH  1
+RD . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B7H  1
+ES . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00ACH  1
+IP . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B8H  1
+RI . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0098H  1
+INT0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B2H  1
+CY . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D7H  1
+TI . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0099H  1
+INT1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B3H  1
+PS . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BCH  1
+T2EX . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0091H  1
+OV . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D2H  1
+main . . . . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+C_T2 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C9H  1
+WR . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B6H  1
+RCLK . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CDH  1
+TCLK . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CCH  1
+PCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0087H  1
+SCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0098H  1
+TMOD . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0089H  1
+TCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0088H  1
+IE0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0089H  1
+IE1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008BH  1
+CP_RL2 . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C8H  1
+ET0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A9H  1
+ET1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00ABH  1
+TF0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008DH  1
+ET2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00ADH  1
+TF1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008FH  1
+TF2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CFH  1
+RB8. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009AH  1
+TH0. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008CH  1
+EX0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A8H  1
+IT0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0088H  1
+TH1. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008DH  1
+TB8. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009BH  1
+EX1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00AAH  1
+IT1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008AH  1
+P. . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D0H  1
+SM0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009FH  1
+TL0. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008AH  1
+SM1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009EH  1
+SM2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009DH  1
+PT0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B9H  1
+PT1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BBH  1
+RS0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D3H  1
+PT2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BDH  1
+TR0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008CH  1
+C51 COMPILER V6.03b  MAIN                                                                  11/26/2000 19:19:49 PAGE 4   
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+RS1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D4H  1
+TR1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008EH  1
+TR2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CAH  1
+PX0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B8H  1
+PX1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BAH  1
+EXEN2. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CBH  1
+REN. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009CH  1
+T2CON. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C8H  1
+RXD. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B0H  1
+TXD. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B1H  1
+F0 . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D5H  1
+_printf. . . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+PSW. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D0H  1
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     61    ----
+   CONSTANT SIZE    =     94    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

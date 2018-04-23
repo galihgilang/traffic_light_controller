@@ -1,0 +1,39 @@
+﻿<Window x:Class="lampu_lalu_lintas.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Traffic Controller TELEPICO" Height="600" Width="1024">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Image Name="image1" Height="500" Width="500" Margin="468,30,0,0" HorizontalAlignment="Left" Stretch="Fill" VerticalAlignment="Top" Source="/lampu%20lalu%20lintas;component/Images/latar%20persimpangan.png" />
+            <Grid Name="grid1" Height="500" Width="500" Margin="468,30,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <Ellipse Name="redes" Height="13" Margin="860,322,0,0" Stroke="#FF555555" VerticalAlignment="Top" Fill="#FF555555" HorizontalAlignment="Left" Width="13" />
+            <Ellipse Name="yeles" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="875,322,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="grees" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="890,322,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="reder" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="860,290,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="yeler" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="875,290,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="greer" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="890,290,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="grews" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="533,226,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="yelws" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="548,226,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="redws" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="563,226,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="grewr" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="533,259,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="yelwr" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="548,259,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="redwr" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="563,259,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="rednr" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="727,125,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="grenr" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="727,95,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="yelnr" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="727,110,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="redns" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="762,125,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="grens" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="762,95,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="yelns" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="762,110,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="gresr" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="696,454,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="redsr" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="696,424,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="yelsr" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="696,439,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="gress" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="663,454,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="redss" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="663,424,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <Ellipse Name="yelss" Fill="#FF555555" Height="13" HorizontalAlignment="Left" Margin="663,439,0,0" Stroke="#FF555555" VerticalAlignment="Top" Width="13" />
+            <TextBlock Name="textjdl" Height="29" Margin="122,30,0,0" Text="TRAFFIC CONTROLLER" VerticalAlignment="Top" FontSize="25" FontWeight="Bold" FontFamily="Rockwell" HorizontalAlignment="Left" Width="311" />
+            <TextBlock Height="23" HorizontalAlignment="Left" Margin="220,74,0,0" Name="textsubjdl" Text="TELEPICO" VerticalAlignment="Top" />
+            <TextBlock Name="textwkt" Height="23" HorizontalAlignment="Left" Margin="230,125,0,0" Text="waktu" VerticalAlignment="Top" />
+            <TextBlock Name="texttgl" Height="23" HorizontalAlignment="Left" Margin="230,166,0,0" Text="tanggal" VerticalAlignment="Top" />
+        </Grid>
+    </ScrollViewer>
+</Window>
